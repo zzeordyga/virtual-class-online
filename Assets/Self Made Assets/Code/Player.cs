@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : Photon.MonoBehaviour
 {
+    public PhotonView photonView;
     public CharacterController controller;
+    public GameObject playerCamera;
+    public Animator anim;
 
     #region Movement Variables
     public float speed = 12f;
@@ -24,6 +27,14 @@ public class PlayerMovement : MonoBehaviour
     bool isGrounded;
     #endregion
 
+    private void Awake()
+    {
+        if (photonView.isMine)
+        {
+            playerCamera.SetActive(true);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -38,6 +49,14 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
         }
 
+        if (photonView.isMine)
+        {
+            CheckMovement();
+        }
+    }
+
+    private void CheckMovement()
+    {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -51,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             // Formula for jumping
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
