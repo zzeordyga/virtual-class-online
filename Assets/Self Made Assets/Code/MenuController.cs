@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    [SerializeField] private string VersionName = "0.1";
+    [SerializeField] private string VersionName = "0.0.0";
     [SerializeField] private GameObject MainPanel;
     [SerializeField] private GameObject RoomPanel;
 
