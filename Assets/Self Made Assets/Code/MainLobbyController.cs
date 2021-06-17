@@ -35,5 +35,6 @@ public class MainLobbyController : MonoBehaviour
     private void OnCreatedRoom()
     {
         Debug.Log("Room create successfully");
+        PhotonNetwork.LoadLevel(1);
     }
 }

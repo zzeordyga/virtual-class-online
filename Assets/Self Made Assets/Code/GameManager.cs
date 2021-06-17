@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public GameObject SceneCamera;
 
     private void Awake()
     {
@@ -14,8 +13,10 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity, 0);
-        SceneCamera.SetActive(false);
+        var random = Random.Range(30f, 30f);
+        PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
+        GameObject playerCamera = playerPrefab.transform.Find("CharacterCamera").gameObject;
+        playerCamera.SetActive(false);
     }
 
 }
