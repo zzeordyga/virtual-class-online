@@ -20,6 +20,7 @@ public class LobbyNetwork : MonoBehaviour
     private void OnConnectedToMaster()
     {
         SetUsername();
+        PhotonNetwork.automaticallySyncScene = true;
         PhotonNetwork.JoinLobby(TypedLobby.Default);
         Debug.Log("Connected to master...");
     }

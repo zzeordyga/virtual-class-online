@@ -13,7 +13,7 @@ public class LobbyCanvas : MonoBehaviour
    
     public void OnClickJoinRoom(string roomName)
     {
-
+        PhotonNetwork.JoinRoom(roomName);
     }
    
 }
