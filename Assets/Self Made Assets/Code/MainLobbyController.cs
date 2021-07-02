@@ -34,6 +34,7 @@ public class MainLobbyController : MonoBehaviour
 
     private void OnCreatedRoom()
     {
+        Debug.Log("Length of Rooms : " + PhotonNetwork.GetRoomList().Length);
         Debug.Log("Room create successfully");
         PhotonNetwork.LoadLevel(1);
     }
