@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainLobbyController : MonoBehaviour
 {
@@ -37,5 +38,9 @@ public class MainLobbyController : MonoBehaviour
         Debug.Log("Length of Rooms : " + PhotonNetwork.GetRoomList().Length);
         Debug.Log("Room create successfully");
         PhotonNetwork.LoadLevel(1);
+    }
+
+    public void back(){
+        SceneManager.LoadScene("LoginAPIScene");
     }
 }
