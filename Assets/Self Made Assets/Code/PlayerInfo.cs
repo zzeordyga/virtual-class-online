@@ -7,6 +7,7 @@ public class PlayerInfo
     public string BinusianId;
     public string Major;
     public string Name;
+    public string PictureId;
     public string Role;
     public string UserId;
     public string UserName;

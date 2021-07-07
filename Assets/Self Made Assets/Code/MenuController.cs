@@ -5,66 +5,41 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    [SerializeField] private string VersionName = "0.0.0";
-    [SerializeField] private GameObject MainPanel;
-    [SerializeField] private GameObject RoomPanel;
-
-    [SerializeField] private InputField roomInput;
-
-    // The string that holds the name of the room chosen
-    private string currRoom;
-
-    private void Awake()
-    {
-        PhotonNetwork.ConnectUsingSettings(VersionName);
-    }
+    public GameObject menuCanvas;
+    public GameObject loginMenuCanvas;
+    public GameObject mainMenuCanvas;
+    public GameObject lobbyNetwork;
 
     private void Start()
     {
-        
+        SwitchMenu(1);
     }
 
-    private void OnConnectedToMaster()
+    public void SwitchMenu(int flag)
     {
-        PhotonNetwork.JoinLobby(TypedLobby.Default);
-        Debug.Log("Connected");
-    }
-
-    private void SetUsername()
-    {
-        // This is for setting the display name for the user, not for the Room name
-        PhotonNetwork.playerName = roomInput.text;
-    }
-
-    public void CreateRoom()
-    {
-        string roomName = roomInput.text;
-
-        PhotonNetwork.CreateRoom(roomName, new RoomOptions() { maxPlayers = 10 }, null);
-    }
-
-    public void JoinRoom()
-    {
-        PhotonNetwork.JoinRoom(currRoom);
-    }
-
-    private void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel("ClassScene");
-    }
-
-    private void SwitchMenu(int flag)
-    {
-        if(flag == 1)
+        if (flag == 1)
         {
-            MainPanel.SetActive(false);
-            RoomPanel.SetActive(true);
+            menuCanvas.SetActive(true);
+            loginMenuCanvas.SetActive(false);
+            mainMenuCanvas.SetActive(false);
         }
-        else
+        else if (flag == 2)
         {
-            MainPanel.SetActive(true);
-            RoomPanel.SetActive(false);
+            menuCanvas.SetActive(false);
+            loginMenuCanvas.SetActive(true);
+            mainMenuCanvas.SetActive(false);
         }
+        else if (flag == 3)
+        {
+            menuCanvas.SetActive(false);
+            loginMenuCanvas.SetActive(false);
+            mainMenuCanvas.SetActive(true);
+        }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
 }

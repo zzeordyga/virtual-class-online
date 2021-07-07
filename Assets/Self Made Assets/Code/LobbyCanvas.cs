@@ -16,4 +16,5 @@ public class LobbyCanvas : MonoBehaviour
         PhotonNetwork.JoinRoom(roomName);
     }
    
+  
 }
