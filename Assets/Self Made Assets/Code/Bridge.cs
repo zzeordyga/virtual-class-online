@@ -10,12 +10,7 @@ using TMPro;
 
 public class Bridge : MonoBehaviour
 {
-    class ObjectSalt{
-        public string Challenge;
-        public string Salt; 
-    }
-
-    ObjectSalt objectSalt;
+    SaltInfo objectSalt;
 
     public TMP_InputField usernameField;
     public TMP_InputField passwordField;
@@ -28,30 +23,39 @@ public class Bridge : MonoBehaviour
         passwordField.contentType = TMP_InputField.ContentType.Password;
     }
 
-    public void login() {
-        StartCoroutine(getSalt());
+    private void OnEnable()
+    {
+        if (usernameField.text != "" && passwordField.text != "")
+        {
+            usernameField.text = "";
+            passwordField.text = "";
+        }
     }
 
-    IEnumerator getSalt() {
+    public void Login() {
+        StartCoroutine(GetSalt());
+    }
+
+    IEnumerator GetSalt() {
         string username = usernameField.text.ToUpper();
         UnityWebRequest uwr = UnityWebRequest.Get(saltUrl + username);
         yield return uwr.SendWebRequest();
 
-        if (uwr.isNetworkError)
+        if (uwr.result == UnityWebRequest.Result.ConnectionError)
         {
             Debug.Log("Error While Sending: " + uwr.error);
         }
         else
         {
-            objectSalt = JsonUtility.FromJson<ObjectSalt>(uwr.downloadHandler.text);
+            objectSalt = JsonUtility.FromJson<SaltInfo>(uwr.downloadHandler.text);
                 
             string salt = objectSalt.Salt;
             Debug.Log("Salt: " + salt);
-            StartCoroutine(getLogin(salt));
+            StartCoroutine(GetLogin(salt));
         }
     }
 
-    IEnumerator getLogin(string salt) {
+    IEnumerator GetLogin(string salt) {
         string username = usernameField.text.ToUpper();
         string password = passwordField.text;
         string hashPassword = AES.General.EncryptToBase64(salt + username, password);
@@ -72,15 +76,19 @@ public class Bridge : MonoBehaviour
             else
             {
                 Debug.Log("Form upload complete!");
-                Debug.Log(www.downloadHandler.text);
                 if(www.downloadHandler.text != null){
-                    SceneManager.LoadScene("MainMenu");
+                    PlayerNetwork.instance.PlayerInfo = (PlayerInfo)JsonUtility.FromJson<PlayerInfo>(www.downloadHandler.text);
+                    LobbyNetwork.Init();
+                } else
+                {
+                    usernameField.text = "";
+                    passwordField.text = "";
                 }
             }
         }
     }
 
-    public void back(){
+    public void Back(){
         SceneManager.LoadScene("LoginScene");
     }
 }

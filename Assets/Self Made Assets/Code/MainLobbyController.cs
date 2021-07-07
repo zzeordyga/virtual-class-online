@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class MainLobbyController : MonoBehaviour
 {
+    public MenuController menuController;
     [SerializeField]
     private TextMeshProUGUI _roomName;
 
@@ -40,7 +41,9 @@ public class MainLobbyController : MonoBehaviour
         PhotonNetwork.LoadLevel(1);
     }
 
-    public void back(){
-        SceneManager.LoadScene("LoginAPIScene");
+    public void LogOut(){
+        PhotonNetwork.Disconnect();
+        PlayerNetwork.instance.PlayerInfo = null;
+        menuController.SwitchMenu(1);
     }
 }

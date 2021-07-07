@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class LobbyNetwork : MonoBehaviour
 {
-    [SerializeField] private string VersionName = "0.1";
+    public MenuController menuController;
+    [SerializeField] private static string VersionName = "0.0";
 
     private void Start()
+    {
+       
+    }
+
+    public static void Init()
     {
         PhotonNetwork.ConnectUsingSettings(VersionName);
         Debug.Log("Connecting to server...");
@@ -28,5 +34,6 @@ public class LobbyNetwork : MonoBehaviour
     private void OnJoinedLobby()
     {
         print("Joined lobby");
+        menuController.SwitchMenu(3);
     }
 }
