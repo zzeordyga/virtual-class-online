@@ -10,10 +10,10 @@ public class LobbyCanvas : MonoBehaviour
     {
         get { return _roomViewGroup; }
     }
-   
-    public void OnClickJoinRoom(string roomName)
+
+    public void JoinRoom(string roomName)
     {
-        PhotonNetwork.JoinRoom(roomName);
+        GameManager.JoinRoom(roomName);
     }
-   
+
 }

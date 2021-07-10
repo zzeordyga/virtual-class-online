@@ -30,7 +30,7 @@ public class RoomListingController : MonoBehaviour
         LobbyCanvas lobbyCanvas = lobbyCanvasObj.GetComponent<LobbyCanvas>();
 
         Button button = GetComponent<Button>();
-        button.onClick.AddListener(() => lobbyCanvas.OnClickJoinRoom(_roomName.text));
+        button.onClick.AddListener(() => lobbyCanvas.JoinRoom(_roomName.text));
     }
 
     private void OnDestroy()
