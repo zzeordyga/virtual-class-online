@@ -70,12 +70,15 @@ EditorBuildSettings:
       for 4.unity
     guid: e7a7f9734636d415ca84ef3aaf7680f6
   - enabled: 1
+    path: Assets/Scenes/LoginScene.unity
+    guid: a289397ef819cf4419f2f7694826cdf5
+  - enabled: 1
+    path: Assets/Scenes/LoginAPIScene.unity
+    guid: ddb71a404b77b5e4a97f73a37e83b27c
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: ac40c452d94ce234ab6e900be2883c95
   - enabled: 1
-    path: Assets/Scenes/ClassScene.unity
+    path: Assets/Scenes/TestingScene.unity
     guid: 3774fd5b2a161384d83d462673d7b205
-  - enabled: 0
-    path: Assets/Scenes/LoginScene.unity
-    guid: a289397ef819cf4419f2f7694826cdf5
   m_configObjects: {}

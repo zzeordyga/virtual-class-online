@@ -21,7 +21,7 @@ public class AgoraVideoCall : MonoBehaviour
     private Logger logger;
     private IRtcEngine mRtcEngine = null;
     private const float Offset = 100;
-    private static string channelName = "Agora_Channel";
+    //private static string channelName = "Agora_Channel";
 
     // Use this for initialization
     void Start()
