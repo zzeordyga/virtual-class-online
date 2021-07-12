@@ -16,11 +16,7 @@ MonoBehaviour:
   VoiceAppID: 
   ChatAppID: 
   HostType: 1
-<<<<<<< HEAD
-  PreferredRegion: 2
-=======
   PreferredRegion: 0
->>>>>>> c78795331b59e001220d4adf3d492aac1c2e3161
   EnabledRegions: -1
   Protocol: 0
   ServerAddress: 

@@ -12,7 +12,9 @@ public class MainLobbyController : MonoBehaviour
 
     public void OnClick_CreateRoom()
     {
-        GameManager.CreateRoom(_roomName.text);
+        GameManager gm = FindObjectOfType<GameManager>();
+
+        if(!ReferenceEquals(gm, null)) gm.CreateRoom(_roomName.text);
     }
 
     private void OnCreatedRoom()

@@ -13,7 +13,9 @@ public class LobbyCanvas : MonoBehaviour
 
     public void JoinRoom(string roomName)
     {
-        GameManager.JoinRoom(roomName);
+        GameManager gm = FindObjectOfType<GameManager>();
+
+        if (!ReferenceEquals(gm, null)) gm.JoinRoom(roomName);
     }
 
 }
