@@ -452,6 +452,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c88a3845031d33848b41b5c8d88763ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AppID: your_appid
+  TokenID: your_token
+  appIDText: {fileID: 0}
+  VersionName: 0.0.0
   playerPrefab: {fileID: 1218915307753672216, guid: eb5a937eebe381b4b9d45579b5ebf0ed,
     type: 3}
 --- !u!4 &910198608
@@ -865,12 +869,17 @@ PrefabInstance:
     - target: {fileID: 1218915307577520527, guid: eb5a937eebe381b4b9d45579b5ebf0ed,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1218915307577520527, guid: eb5a937eebe381b4b9d45579b5ebf0ed,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.24
+      value: 0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218915307577520527, guid: eb5a937eebe381b4b9d45579b5ebf0ed,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.89
       objectReference: {fileID: 0}
     - target: {fileID: 1218915307753672215, guid: eb5a937eebe381b4b9d45579b5ebf0ed,
         type: 3}

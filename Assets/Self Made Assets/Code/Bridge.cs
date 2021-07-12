@@ -77,6 +77,9 @@ public class Bridge : MonoBehaviour
             {
                 Debug.Log("Form upload complete!");
                 if(www.downloadHandler.text != null){
+
+                    if (ReferenceEquals(PlayerNetwork.instance, null)) Debug.Log("NULL WOI JOSE JANGAN NGEMENG");
+
                     PlayerNetwork.instance.PlayerInfo = (PlayerInfo)JsonUtility.FromJson<PlayerInfo>(www.downloadHandler.text);
                     LobbyNetwork.Init();
                 } else

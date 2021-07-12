@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     /// 
     [Header("Agora Properties")]
     [SerializeField]
-    private static string AppID = "your_appid";
+    private string AppID = "your_appid";
     [SerializeField]
     private string TokenID = "your_token";
     [SerializeField]
@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        PhotonNetwork.ConnectUsingSettings(VersionName);
+        //PhotonNetwork.ConnectUsingSettings(VersionName);
         //SpawnPlayer();
     }
 
@@ -75,7 +75,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("create room successfully sent");
             // TODO : Create channel using backend Node.js (or this might work! hopefully!!)
-            rtcEngine.CreateChannel(roomName);
             HandleSceneChange(roomName);
         }
         else
@@ -103,19 +102,18 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Length of Rooms : " + PhotonNetwork.GetRoomList().Length);
         Debug.Log("Room create successfully");
-        PhotonNetwork.LoadLevel(1);
-        SpawnPlayer();
+        PhotonNetwork.LoadLevel("ClassScene");
     }
 
     private void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("ClassScene");
-        SpawnPlayer();
+        //PhotonNetwork.LoadLevel("ClassScene");
     }
 
     // Done when user is joining a room
     public void SpawnPlayer()
     {
+        Debug.Log("NGESPAWN KOK");
         var random = Random.Range(30f, 30f);
         PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
         GameObject playerCamera = playerPrefab.transform.Find("CharacterCamera").gameObject;

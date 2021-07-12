@@ -48,10 +48,14 @@ public class PlayerViewControllerBase : IVideoChatClient
         PrepareToJoin();
 
         // join channel by key (sample)
-        mRtcEngine.JoinChannelByKey("00669c9d55ce62e4a3384886a8b1de3261dIACiuB5WpMn+Vq/Tt0KxU17RWGm1/NZw7CAV09wQLtqJzDLRTXgAAAAAEACqPfBqvn/jYAEAAQC+f+Ng", channel, "", 0);
+        //mRtcEngine.JoinChannelByKey("00669c9d55ce62e4a3384886a8b1de3261dIACiuB5WpMn+Vq/Tt0KxU17RWGm1/NZw7CAV09wQLtqJzDLRTXgAAAAAEACqPfBqvn/jYAEAAQC+f+Ng", channel, "", 0);
 
         // join channel (the real way)
-        //mRtcEngine.JoinChannel(mChannel, null, 0);
+        //if(mRtcEngine.JoinChannel(mChannel, null, 0) != 0)
+        //{
+        //    mRtcEngine.CreateChannel(mChannel);
+        //    mRtcEngine.JoinChannel(mChannel, null, 0);
+        //}
 
         Debug.Log("initializeEngine done");
     }
@@ -222,7 +226,7 @@ public class PlayerViewControllerBase : IVideoChatClient
 
     public virtual void OnSceneLoaded()
     {
-        SetupUI();
+        //SetupUI();
     }
 
     // implement engine callbacks
