@@ -2,6 +2,15 @@ using agora_gaming_rtc;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public enum SceneEnum
+{
+    MainMenuScene,
+    ClassScene
+    // Add More Accordingly
+};
 
 public class GameManager : MonoBehaviour
 {
@@ -11,8 +20,13 @@ public class GameManager : MonoBehaviour
     /// 
     [Header("Agora Properties")]
     [SerializeField]
-    private string AppID = "your_appid";
+    private static string AppID = "your_appid";
+    [SerializeField]
     private string TokenID = "your_token";
+    [SerializeField]
+    private Text appIDText;
+
+    private static bool _initialized = false;
 
     [Header("Photon Properties")]
     [SerializeField]
@@ -27,17 +41,17 @@ public class GameManager : MonoBehaviour
 
     public GameObject playerPrefab;
 
-    //private void Start()
-    //{
-    //    CheckAppId();
-    //    LoadLastChannel();
-    //}
+    private void Start()
+    {
+        CheckAppId(); //  Agora App Id
+        //LoadLastChannel(); //  Load a default channel for each player (Not Needed)
+    }
 
-    //void Update()
-    //{
-    //    CheckPermissions();
-    //    CheckExit();
-    //}
+    void Update()
+    {
+        CheckPermissions();
+        CheckExit();
+    }
 
     private void Awake()
     {
@@ -46,7 +60,9 @@ public class GameManager : MonoBehaviour
         //SpawnPlayer();
     }
 
-    public static void CreateRoom(string roomName)
+    #region Photon Methods
+
+    public void CreateRoom(string roomName)
     {
         RoomOptions roomOptions = new RoomOptions()
         {
@@ -58,6 +74,9 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default))
         {
             Debug.Log("create room successfully sent");
+            // TODO : Create channel using backend Node.js (or this might work! hopefully!!)
+            rtcEngine.CreateChannel(roomName);
+            HandleSceneChange(roomName);
         }
         else
         {
@@ -65,11 +84,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static void JoinRoom(string roomName)
+    public void JoinRoom(string roomName)
     {
-        PhotonNetwork.JoinRoom(roomName);
+        if (PhotonNetwork.JoinRoom(roomName))
+        {
+            Debug.Log("Joined room successfully");
+            HandleSceneChange(roomName);
+        }
+        
     }
-
 
     private void OnPhotonCreateRoomFailed(object[] codeAndMessage)
     {
@@ -81,6 +104,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Length of Rooms : " + PhotonNetwork.GetRoomList().Length);
         Debug.Log("Room create successfully");
         PhotonNetwork.LoadLevel(1);
+        SpawnPlayer();
     }
 
     private void OnJoinedRoom()
@@ -98,6 +122,8 @@ public class GameManager : MonoBehaviour
         playerCamera.SetActive(false);
     }
 
+    #endregion
+
     #region Agora Methods
 
     void OnApplicationQuit()
@@ -110,6 +136,7 @@ public class GameManager : MonoBehaviour
         IRtcEngine.Destroy();
     }
 
+    // This is not needed because we are going to always make users choose the channel
     private void LoadLastChannel()
     {
         string channel = PlayerPrefs.GetString("ChannelName");
@@ -124,6 +151,17 @@ public class GameManager : MonoBehaviour
     private void CheckAppId()
     {
         Debug.Assert(AppID.Length > 10, "AppId is problematic");
+        if (AppID.Length > 10)
+        {
+            SetAppIdText();
+            _initialized = true;
+        }
+    }
+
+    void SetAppIdText()
+    {
+        if (appIDText != null)
+            appIDText.text = "AppID:" + AppID.Substring(0, 4) + "********" + AppID.Substring(AppID.Length - 4, 4);
     }
 
     private void CheckPermissions()
@@ -159,6 +197,60 @@ public class GameManager : MonoBehaviour
 
         int cnt = deviceManager.GetVideoDeviceCount();
         Debug.Log("Device count =============== " + cnt);
+    }
+
+    // Call when successfully logged in
+    public void HandleSceneChange(string channelName)
+    {
+        if (string.IsNullOrEmpty(channelName))
+        {
+            Debug.LogError("Channel name can not be empty!");
+            return;
+        }
+
+        if (!_initialized)
+        {
+            Debug.LogError("AppID null or app is not initialized properly!");
+            return;
+        }
+
+        app = new AgoraShareScreen();
+
+        if (app == null) return;
+
+        app.OnViewControllerFinish += OnViewControllerFinish;
+        // load engine
+        app.LoadEngine(AppID);
+        // join channel and jump to next scene
+        app.Join(channelName);
+        //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
+        //SceneManager.LoadScene(SceneEnum.ClassScene.ToString(), LoadSceneMode.Single);
+
+    }
+
+    public void OnViewControllerFinish()
+    {
+        if (!ReferenceEquals(app, null))
+        {
+            app = null; // delete app
+            LeaveShareScreen();
+            //SceneManager.LoadScene(SceneEnum.MainMenuScene.ToString(), LoadSceneMode.Single); 
+        }
+    }
+
+    public void LeaveShareScreen()
+    {
+        // TODO : Do something when player is out of share screen mode
+    }
+
+    public void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        if (!ReferenceEquals(app, null))
+        {
+            app.OnSceneLoaded(); // call this after scene is loaded
+        }
+
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 
     #endregion
