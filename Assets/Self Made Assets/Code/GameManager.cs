@@ -113,7 +113,6 @@ public class GameManager : MonoBehaviour
     // Done when user is joining a room
     public void SpawnPlayer()
     {
-        Debug.Log("NGESPAWN KOK");
         var random = Random.Range(30f, 30f);
         PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
         GameObject playerCamera = playerPrefab.transform.Find("CharacterCamera").gameObject;

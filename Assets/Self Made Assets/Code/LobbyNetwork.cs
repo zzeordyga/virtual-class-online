@@ -18,17 +18,27 @@ public class LobbyNetwork : MonoBehaviour
         Debug.Log("Connecting to server...");
     }
 
-    private void SetUsername()
+    private void SetUserProperties()
     {
-        PhotonNetwork.playerName = "Testing User";
+        PlayerInfo _playerInfo = PlayerNetwork.instance.PlayerInfo;
+        PhotonNetwork.player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() {
+            { "BinusianId", _playerInfo.BinusianId},
+            { "Major", _playerInfo.Major},
+            { "Name", _playerInfo.Name},
+            { "PictureId", _playerInfo.PictureId},
+            { "Role", _playerInfo.Role},
+            { "UserId", _playerInfo.UserId},
+            { "UserName", _playerInfo.UserName},
+        });
     }
 
     private void OnConnectedToMaster()
     {
-        SetUsername();
+        SetUserProperties();
         PhotonNetwork.automaticallySyncScene = true;
         PhotonNetwork.JoinLobby(TypedLobby.Default);
         Debug.Log("Connected to master...");
+        Debug.Log("Connected as " + PhotonNetwork.player.CustomProperties["UserName"]);
     }
 
     private void OnJoinedLobby()

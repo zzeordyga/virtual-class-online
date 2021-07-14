@@ -56,6 +56,7 @@ public class Bridge : MonoBehaviour
     }
 
     IEnumerator GetLogin(string salt) {
+        bool isLogged = false;
         string username = usernameField.text.ToUpper();
         string password = passwordField.text;
         string hashPassword = AES.General.EncryptToBase64(salt + username, password);
@@ -76,11 +77,12 @@ public class Bridge : MonoBehaviour
             else
             {
                 Debug.Log("Form upload complete!");
-                if(www.downloadHandler.text != null){
-
-                    if (ReferenceEquals(PlayerNetwork.instance, null)) Debug.Log("NULL WOI JOSE JANGAN NGEMENG");
-
+                if(www.downloadHandler.text != null)
+                {
                     PlayerNetwork.instance.PlayerInfo = (PlayerInfo)JsonUtility.FromJson<PlayerInfo>(www.downloadHandler.text);
+                }
+                if (isLogged == false)
+                {
                     LobbyNetwork.Init();
                 } else
                 {

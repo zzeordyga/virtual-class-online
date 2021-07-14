@@ -11447,21 +11447,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterCamera
       objectReference: {fileID: 0}
-    - target: {fileID: 1989292980657129421, guid: 4135000b164d2ff4781bd239e327e8b5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1989292980657129423, guid: 4135000b164d2ff4781bd239e327e8b5,
         type: 3}
       propertyPath: playerBody
       value: 
       objectReference: {fileID: 5858089310147845599}
-    - target: {fileID: 1989292980657129423, guid: 4135000b164d2ff4781bd239e327e8b5,
-        type: 3}
-      propertyPath: mouseSensitivity
-      value: 500
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4135000b164d2ff4781bd239e327e8b5, type: 3}
 --- !u!4 &1307981182424062211 stripped
