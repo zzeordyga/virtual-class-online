@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6384398234312370222}
   - component: {fileID: 2125133833447751469}
   - component: {fileID: 581452904361847053}
+  - component: {fileID: -2096344437159780561}
   m_Layer: 0
   m_Name: Headphones
   m_TagString: Untagged
@@ -82,3 +83,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-2096344437159780561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627598211484125057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92965cf4414c030489fbd5e4bd8cda7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

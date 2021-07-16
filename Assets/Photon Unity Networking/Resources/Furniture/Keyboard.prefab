@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1609079886266230106}
   - component: {fileID: 5888212985439350907}
   - component: {fileID: 7787864487724791622}
+  - component: {fileID: 7946039742230830485}
   m_Layer: 0
   m_Name: Keyboard
   m_TagString: Untagged
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225140433333794604}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -3.3529325, y: 0.022525901, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 172.04741, y: 155.22891, z: 118.060005}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &5888212985439350907
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -60,7 +61,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -3846018093981099296, guid: 37068735c9cc13745b2151621ebcfcfa, type: 3}
-  - {fileID: -6922793697723135513, guid: 37068735c9cc13745b2151621ebcfcfa, type: 3}
+  - {fileID: 2100000, guid: c86986234da9c574b8e80c2a1c44a8e9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,3 +83,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7946039742230830485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225140433333794604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92965cf4414c030489fbd5e4bd8cda7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
