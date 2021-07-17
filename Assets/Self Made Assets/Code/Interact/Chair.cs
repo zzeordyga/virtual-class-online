@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Chair : Interactable
 {
-    public float min = 90;
-    public float max = 270;
+    public float min = 90f;
+    public float max = 270f;
+
+    private void Start()
+    {
+        max = gameObject.transform.localEulerAngles.y;
+        min = gameObject.transform.localEulerAngles.y - 180f;
+    }
 
     public override string GetDescription(GameObject player)
     {
@@ -16,11 +22,19 @@ public class Chair : Interactable
     {
         Animator playerAnimator = player.GetComponent<Animator>();
 
+        Debug.Log("Before -> Player : " + player.transform.position);
+
         player.transform.position = transform.Find("SitCheck").position - new Vector3(0f, 1.2f, 0f);
+
+        Debug.Log("After -> Player : " + player.transform.position);
 
         if(!ReferenceEquals(playerAnimator, null)) playerAnimator.SetBool("Sitting", true);
 
-        MouseLook ml = player.GetComponent<MouseLook>();
-        if (!ReferenceEquals(ml, null)) ml.ClampRotation(min, max);
+        MouseLook ml = player.GetComponentInChildren<MouseLook>();
+        if (!ReferenceEquals(ml, null))
+        {
+            Debug.Log("Please kepanggil");
+            ml.ClampRotation(min, max);
+        }
     }
 }

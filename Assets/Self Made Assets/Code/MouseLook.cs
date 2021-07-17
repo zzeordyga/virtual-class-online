@@ -58,11 +58,13 @@ public class MouseLook : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
 
+        if (yRotation >= 360 || yRotation <= -360) yRotation = 0;
+
         if (playerBody != null)
         {
             if (_isRotatable)
             {
-                yRotation = Mathf.Clamp(yRotation, _minRotation, _maxRotation);
+                yRotation = Mathf.Clamp(yRotation, MinRotation, MaxRotation);
                 
             }
             playerBody.localRotation = Quaternion.Euler(0f, -yRotation, 0f);
@@ -72,8 +74,11 @@ public class MouseLook : MonoBehaviour
 
     public void ClampRotation(float min, float max)
     {
-        _minRotation = min;
-        _maxRotation = max;
+        MinRotation = min;
+        MaxRotation = max;
+
+        Debug.Log("Min : " + MinRotation);
+        Debug.Log("Max : " + MaxRotation);
     }
 
 }
