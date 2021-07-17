@@ -38,7 +38,7 @@ public class MouseLook : MonoBehaviour
     {
         //Locks the Cursor in the middle
 
-        Cursor.lockState = CursorLockMode.Locked;
+        DisableCursor();
     }
 
 
@@ -81,4 +81,23 @@ public class MouseLook : MonoBehaviour
         Debug.Log("Max : " + MaxRotation);
     }
 
+    public void EnableCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void DisableCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void Lock()
+    {
+        this.enabled = false;
+    }
+
+    public void Unlock()
+    {
+        this.enabled = true;
+    }
 }

@@ -38,6 +38,7 @@ public class PlayerInteraction : MonoBehaviour
                 playerAnimator.SetBool("Sitting", false);
             }
         }
+
         Transform[] allChildren = transform.GetComponentsInChildren<Transform>();
         foreach (Transform c in allChildren)
         {
