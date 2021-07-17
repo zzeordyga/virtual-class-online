@@ -4,6 +4,28 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    private bool _isRotatable = false;
+    public bool IsRotatable
+    {
+        get { return _isRotatable; }
+        set { _isRotatable = value; }
+    }
+
+    private float _minRotation = 0f;
+    private float _maxRotation = 360f;
+
+    public float MinRotation
+    {
+        get { return _minRotation; }
+        set { _minRotation = value; }
+    }
+
+    public float MaxRotation
+    {
+        get { return _maxRotation; }
+        set { _maxRotation = value; }
+    }
+
     public float mouseSensitivity = 100f;
 
     public Transform playerBody;
@@ -18,6 +40,7 @@ public class MouseLook : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -39,5 +62,25 @@ public class MouseLook : MonoBehaviour
         {
             playerBody.rotation = Quaternion.Euler(0f, -yRotation, 0f);
         }
+
+        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        if (playerBody != null)
+        {
+            if (_isRotatable)
+            {
+                yRotation = Mathf.Clamp(yRotation, _minRotation, _maxRotation);
+                
+            }
+            playerBody.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
+
     }
+
+    public void ClampRotation(float min, float max)
+    {
+        _minRotation = min;
+        _maxRotation = max;
+    }
+
 }
