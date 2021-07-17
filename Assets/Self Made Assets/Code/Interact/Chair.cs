@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Chair : Interactable
 {
+    public float min = 90;
+    public float max = 270;
+
     public override string GetDescription()
     {
         return "Press E to sit down";
@@ -12,6 +15,10 @@ public class Chair : Interactable
     public override void Interact(GameObject player)
     {
         Animator playerAnimator = player.GetComponent<Animator>();
-        playerAnimator.SetBool("Sitting", true);
+        if(!ReferenceEquals(playerAnimator, null)) playerAnimator.SetBool("Sitting", true);
+
+        MouseLook ml = player.GetComponent<MouseLook>();
+        if (!ReferenceEquals(ml, null)) ml.ClampRotation(min, max);
+
     }
 }
