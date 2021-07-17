@@ -25,9 +25,11 @@ public class PlayerInteraction : MonoBehaviour
         if (playerAnimator.GetBool("Sitting"))
         {
             playerMovement.enabled = false;
+            mouseLook.IsRotatable = true;
         } else
         {
             playerMovement.enabled = true;
+            mouseLook.IsRotatable = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -44,9 +46,11 @@ public class PlayerInteraction : MonoBehaviour
                 playerCamera = c.gameObject.GetComponent<Camera>();
             }
         }
+        //playerCamera = transform.Find("CharacterCamera").GetComponent<Camera>();
+        Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * interactionDistance , Color.green);
+        bool successHit = false;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, interactionDistance))
         {
-            bool successHit = false;
             var parent = hit.collider.transform.parent;
             if (parent != null)
             {
@@ -54,14 +58,14 @@ public class PlayerInteraction : MonoBehaviour
                 if (interactableObject != null)
                 {
                     HandlerInteraction(interactableObject);
-                    interactionDescription.text = interactableObject.GetDescription();
+                    interactionDescription.text = interactableObject.GetDescription(transform.gameObject);
                     successHit = true;
                 }
             }
-            if (!successHit)
-            {
-                interactionDescription.text = "";
-            }
+        }
+        if (!successHit)
+        {
+            interactionDescription.text = "";
         }
     }
 

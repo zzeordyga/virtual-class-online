@@ -95,7 +95,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.02, y: 0.020000005, z: 0.02000005}
   m_Center: {x: 0, y: 0, z: 0.000000059604645}
---- !u!1 &659717061930121826
+--- !u!1 &911597760081322135
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -103,7 +103,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8079933708625288253}
+  - component: {fileID: 5798964480605143041}
+  - component: {fileID: 2689621627598803706}
   m_Layer: 0
   m_Name: SitCheck
   m_TagString: Untagged
@@ -111,20 +112,33 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8079933708625288253
+--- !u!4 &5798964480605143041
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 659717061930121826}
+  m_GameObject: {fileID: 911597760081322135}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: -5.5483503, y: 7.2638807, z: -0.23192643}
+  m_LocalPosition: {x: -6.383756, y: 6.735592, z: -0.12480337}
   m_LocalScale: {x: 3.3333323, y: 3.333333, z: 3.3333323}
   m_Children: []
   m_Father: {fileID: 1669095201151774762}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2689621627598803706
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911597760081322135}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &965986327003107585
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +247,7 @@ GameObject:
   - component: {fileID: 3771750938555774250}
   m_Layer: 0
   m_Name: Chair
-  m_TagString: Untagged
+  m_TagString: Furniture
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,7 +267,7 @@ Transform:
   - {fileID: 8694820700601626268}
   - {fileID: 4491390946641580621}
   - {fileID: 7945738014266548499}
-  - {fileID: 8079933708625288253}
+  - {fileID: 5798964480605143041}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
@@ -269,6 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4789f47a7f9eb4c8ce9478198c51d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  min: 90
+  max: 270
 --- !u!1 &2241333672728189258
 GameObject:
   m_ObjectHideFlags: 0

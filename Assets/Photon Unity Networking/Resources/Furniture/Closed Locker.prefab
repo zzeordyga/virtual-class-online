@@ -121,12 +121,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3299722613715412136}
-  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 3.040162, y: 3.2121696, z: -4.040001}
-  m_LocalScale: {x: 0.064119995, y: 1.8720795, z: 2.8532796}
+  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710665}
+  m_LocalPosition: {x: 0.08016205, y: -0.5978303, z: 1.9299989}
+  m_LocalScale: {x: 0.064119995, y: 1.8720802, z: 2.8532803}
   m_Children: []
-  m_Father: {fileID: 4737934558634299391}
-  m_RootOrder: 1
+  m_Father: {fileID: 3921819594361525962}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4183992660102710566
 MeshFilter:
@@ -190,6 +190,37 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.000001, z: 2.0000002}
   m_Center: {x: 0, y: 0, z: 0.0000009536743}
+--- !u!1 &3728589670518208065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3921819594361525962}
+  m_Layer: 0
+  m_Name: RotateAngle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3921819594361525962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3728589670518208065}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.96, y: 3.81, z: -5.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4412994439335742464}
+  m_Father: {fileID: 4737934558634299391}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5371482416802272581
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +233,7 @@ GameObject:
   - component: {fileID: -7596023572716125498}
   m_Layer: 0
   m_Name: Closed Locker
-  m_TagString: Untagged
+  m_TagString: Furniture
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -219,7 +250,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 6749394096738878270}
-  - {fileID: 4412994439335742464}
+  - {fileID: 3921819594361525962}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -232,6 +263,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5371482416802272581}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92965cf4414c030489fbd5e4bd8cda7d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9af19bf3b73438746819d8cabbbf4982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

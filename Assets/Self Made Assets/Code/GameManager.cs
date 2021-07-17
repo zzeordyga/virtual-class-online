@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
                 playerCamera.SetActive(false);
             }
         }
+        //playerPrefab.transform.Find("CharacterCamera").gameObject.SetActive(false);
         PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
     }
 

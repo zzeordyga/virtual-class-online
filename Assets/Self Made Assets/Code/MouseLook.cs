@@ -60,19 +60,12 @@ public class MouseLook : MonoBehaviour
 
         if (playerBody != null)
         {
-            playerBody.rotation = Quaternion.Euler(0f, -yRotation, 0f);
-        }
-
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-
-        if (playerBody != null)
-        {
             if (_isRotatable)
             {
                 yRotation = Mathf.Clamp(yRotation, _minRotation, _maxRotation);
                 
             }
-            playerBody.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+            playerBody.localRotation = Quaternion.Euler(0f, -yRotation, 0f);
         }
 
     }
