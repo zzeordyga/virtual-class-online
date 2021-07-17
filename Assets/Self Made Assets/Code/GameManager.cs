@@ -114,9 +114,16 @@ public class GameManager : MonoBehaviour
     public void SpawnPlayer()
     {
         var random = Random.Range(30f, 30f);
+        Transform[] allChildren = playerPrefab.GetComponentsInChildren<Transform>();
+        foreach (Transform c in allChildren)
+        {
+            if (c.name.Equals("CharacterCamera"))
+            {
+                GameObject playerCamera = c.gameObject;
+                playerCamera.SetActive(false);
+            }
+        }
         PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
-        GameObject playerCamera = playerPrefab.transform.Find("CharacterCamera").gameObject;
-        playerCamera.SetActive(false);
     }
 
     #endregion

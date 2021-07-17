@@ -11,6 +11,7 @@ public class PlayerInteraction : MonoBehaviour
     public TextMeshProUGUI interactionDescription;
 
     private Animator playerAnimator;
+    private Camera playerCamera;
 
     private void Start()
     {
@@ -24,11 +25,9 @@ public class PlayerInteraction : MonoBehaviour
         if (playerAnimator.GetBool("Sitting"))
         {
             playerMovement.enabled = false;
-            mouseLook.IsRotatable = true;
         } else
         {
             playerMovement.enabled = true;
-            mouseLook.IsRotatable = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -37,8 +36,14 @@ public class PlayerInteraction : MonoBehaviour
                 playerAnimator.SetBool("Sitting", false);
             }
         }
-
-        Camera playerCamera = transform.Find("CharacterCamera").gameObject.GetComponent<Camera>();
+        Transform[] allChildren = transform.GetComponentsInChildren<Transform>();
+        foreach (Transform c in allChildren)
+        {
+            if (c.name.Equals("CharacterCamera"))
+            {
+                playerCamera = c.gameObject.GetComponent<Camera>();
+            }
+        }
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, interactionDistance))
         {
             bool successHit = false;
