@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Monitor : Interactable
 {
+    private bool isOn = false;
     public override string GetDescription(GameObject player)
     {
         Animator playerAnimator = player.GetComponent<Animator>();
@@ -20,7 +21,26 @@ public class Monitor : Interactable
         Animator playerAnimator = player.GetComponent<Animator>();
         if (playerAnimator.GetBool("Sitting"))
         {
-          //logic here
+            MouseLook ml = player.GetComponentInChildren<MouseLook>();
+            GameObject ScreenUI = transform.Find("UI").gameObject;
+            if (!isOn)
+            {
+                ScreenUI.SetActive(true);
+                if (!ReferenceEquals(ml, null))
+                {
+                    ml.Lock();
+                    ml.EnableCursor();
+                }
+            } else
+            {
+                ScreenUI.SetActive(false);
+                if (!ReferenceEquals(ml, null))
+                {
+                    ml.Unlock();
+                    ml.DisableCursor();
+                }
+            }
+            isOn = !isOn;
         }
     }
 }
