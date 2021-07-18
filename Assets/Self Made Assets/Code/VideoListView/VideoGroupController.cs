@@ -13,4 +13,13 @@ public class VideoGroupController : MonoBehaviour
     }
 
     //add and remove video here
+    public void AddVideo(Player player)
+    {
+        // Please add this to the list of videos (i have no idea how jose help)
+        GameObject videoWindow = Instantiate(video);
+
+        videoWindow.transform.SetParent(transform, false);
+    }
+
+
 }

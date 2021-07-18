@@ -47,7 +47,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
         //playerCamera = transform.Find("CharacterCamera").GetComponent<Camera>();
-        Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * interactionDistance , Color.green);
+        //Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * interactionDistance , Color.green);
         bool successHit = false;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit hit, interactionDistance))
         {

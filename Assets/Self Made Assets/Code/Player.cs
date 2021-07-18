@@ -36,6 +36,8 @@ public class Player : Photon.MonoBehaviour
         {
             playerCamera.SetActive(true);
             playerAnimator = GetComponent<Animator>();
+            VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
+            if(!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
         }
     }
 
@@ -44,7 +46,6 @@ public class Player : Photon.MonoBehaviour
     {
         if (PhotonView.isMine)
         {
-
             Cleaning();
             CheckMovement();
         }
@@ -82,14 +83,14 @@ public class Player : Photon.MonoBehaviour
     private void CheckMovement()
     {
         // Checks using a made sphere with a radius if a certain layer is hit (in this case, Ground Layer)
-        //isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         // Resets the speed of our fall
-        //if (isGrounded && velocity.y < 0)
-        //{
-        //    // Not zero so that we don't immediately reset speed upon colliding with ground
-        //    velocity.y = -2f;
-        //}
+        if (isGrounded && velocity.y < 0)
+        {
+            // Not zero so that we don't immediately reset speed upon colliding with ground
+            velocity.y = -2f;
+        }
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -113,9 +114,9 @@ public class Player : Photon.MonoBehaviour
         //    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         //}
 
-        //velocity.y = gravity * Time.deltaTime;
+        velocity.y = gravity * Time.deltaTime;
 
-        //controller.Move(velocity * Time.deltaTime);
+        controller.Move(velocity * Time.deltaTime);
     }
 
 }
