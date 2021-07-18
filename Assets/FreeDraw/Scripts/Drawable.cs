@@ -34,7 +34,9 @@ namespace FreeDraw
         public static Drawable drawable;
         // MUST HAVE READ/WRITE enabled set in the file editor of Unity
         Sprite drawable_sprite;
-        Texture2D drawable_texture;
+        private Texture2D drawable_texture;
+        [SerializeField]
+        private byte[] rawData;
 
         Vector2 previous_drag_position;
         Color[] clean_colours_array;
@@ -42,7 +44,6 @@ namespace FreeDraw
         Color32[] cur_colors;
         bool mouse_was_previously_held_down = false;
         bool no_drawing_on_current_drag = false;
-
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -133,6 +134,25 @@ namespace FreeDraw
 
 
 
+        
+        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            WhiteBoard obj = transform.parent.GetComponent<WhiteBoard>();
+            if (stream.isWriting && obj.IsOn == 2)
+            {
+                rawData = drawable_texture.EncodeToPNG();
+                stream.SendNext(rawData);
+                obj.IsOn = 0;
+            }
+            else
+            {
+                rawData = (byte[])stream.ReceiveNext();
+                if (rawData.Length > 0)
+                {
+                    drawable_texture.LoadImage(rawData);
+                }
+            }
+        }
 
         // This is where the magic happens.
         // Detects when user is left clicking, which then call the appropriate function
