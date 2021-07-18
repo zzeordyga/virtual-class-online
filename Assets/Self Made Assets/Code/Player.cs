@@ -36,9 +36,11 @@ public class Player : Photon.MonoBehaviour
         {
             playerCamera.SetActive(true);
             playerAnimator = GetComponent<Animator>();
-            VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
-            if(!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
         }
+
+        VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
+        if (!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
+
     }
 
     // Update is called once per frame
@@ -51,21 +53,21 @@ public class Player : Photon.MonoBehaviour
         }
     }
 
-    //private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-    //    Debug.Log("Hello");
-    //    if (stream.isWriting)
-    //    {
-    //        stream.SendNext(transform.position);
-    //        Debug.Log("send" + transform.position);
-    //        //stream.SendNext(transform.rotation);
-    //    } 
-    //    else
-    //    {
-    //        move = (Vector3)stream.ReceiveNext();
-    //        Debug.Log("Receive" + move);
-    //    }
-    //}
+    private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        Debug.Log("Hello");
+        //if (stream.isWriting)
+        //{
+        //    stream.SendNext(transform.position);
+        //    Debug.Log("send" + transform.position);
+        //    //stream.SendNext(transform.rotation);
+        //}
+        //else
+        //{
+        //    move = (Vector3)stream.ReceiveNext();
+        //    Debug.Log("Receive" + move);
+        //}
+    }
 
     private void Cleaning()
     {

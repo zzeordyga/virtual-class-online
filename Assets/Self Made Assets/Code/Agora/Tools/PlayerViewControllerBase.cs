@@ -21,6 +21,8 @@ public class PlayerViewControllerBase : IVideoChatClient
     protected bool remoteUserJoined = false;
     protected bool _enforcing360p = false; // the local view of the remote user resolution
 
+    private string tokenURL = "https://virtual-class-online.herokuapp.com/access_token?channel=test&uid=1234";
+
     public PlayerViewControllerBase()
     {
         // Constructor, nothing to do for base
@@ -51,11 +53,15 @@ public class PlayerViewControllerBase : IVideoChatClient
         //mRtcEngine.JoinChannelByKey("00669c9d55ce62e4a3384886a8b1de3261dIACiuB5WpMn+Vq/Tt0KxU17RWGm1/NZw7CAV09wQLtqJzDLRTXgAAAAAEACqPfBqvn/jYAEAAQC+f+Ng", channel, "", 0);
 
         // join channel (the real way)
-        //if(mRtcEngine.JoinChannel(mChannel, null, 0) != 0)
-        //{
-        //    mRtcEngine.CreateChannel(mChannel);
-        //    mRtcEngine.JoinChannel(mChannel, null, 0);
-        //}
+        if (mRtcEngine.JoinChannel(mChannel, null, 0) != 0)
+        {
+            Debug.Log("Mau bikin channel nich, namanya : " + mChannel);
+            
+            AgoraChannel newChannel = mRtcEngine.CreateChannel(mChannel);
+
+
+            //Debug.Log("Ada error nih, coba liat " + (mRtcEngine.JoinChannel(mChannel, null, 0)));
+        }
 
         Debug.Log("initializeEngine done");
     }

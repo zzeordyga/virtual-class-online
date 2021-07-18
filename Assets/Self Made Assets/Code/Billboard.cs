@@ -10,13 +10,14 @@ public class Billboard : MonoBehaviour
     [SerializeField]
     private Player player;
     [SerializeField]
-    private TextMeshPro playerName;
+    private TMP_Text playerName;
 
     // Update is called once per frame
 
     void Start()
     {
         if (cam == null) cam = Camera.main.transform;
+        playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
     }
 
     void LateUpdate()
