@@ -137,27 +137,27 @@ namespace FreeDraw
         
         private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            // WhiteBoard obj = transform.parent.GetComponent<WhiteBoard>();
-            // if (stream.isWriting && obj.IsOn)
-            // {
-            //     rawData = drawable_texture.EncodeToPNG();
-            //     stream.SendNext(rawData);
-            // }
-            // else
-            // {
-            //     rawData = (byte[])stream.ReceiveNext();
-            //     if (rawData.Length > 0)
-            //     {
-            //         drawable_texture.LoadImage(rawData);
-            //     }
-            // }
+            WhiteBoard obj = transform.parent.GetComponent<WhiteBoard>();
+            if (stream.isWriting && obj.IsOn == 2)
+            {
+                rawData = drawable_texture.EncodeToPNG();
+                stream.SendNext(rawData);
+                obj.IsOn = 0;
+            }
+            else
+            {
+                rawData = (byte[])stream.ReceiveNext();
+                if (rawData.Length > 0)
+                {
+                    drawable_texture.LoadImage(rawData);
+                }
+            }
         }
 
         // This is where the magic happens.
         // Detects when user is left clicking, which then call the appropriate function
         void Update()
         {
-            transform.parent.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.player);
             // Is the user holding down the left mouse button?
             bool mouse_held_down = Input.GetMouseButton(0);
             if (mouse_held_down && !no_drawing_on_current_drag)
