@@ -1035,9 +1035,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 5269517773798749968}
+  - {fileID: 8907939070648203831}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
