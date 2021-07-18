@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FreeDraw;
 
 public class WhiteBoard : Interactable
 { 
     public Camera playerCam;
     public Camera whiteboardCam;
     private bool isOn = false;
+    public bool IsOn{
+        get{return isOn;}
+    }
     public override string GetDescription(GameObject player)
     {
         if (isOn)

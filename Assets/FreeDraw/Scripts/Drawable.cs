@@ -34,7 +34,9 @@ namespace FreeDraw
         public static Drawable drawable;
         // MUST HAVE READ/WRITE enabled set in the file editor of Unity
         Sprite drawable_sprite;
-        Texture2D drawable_texture;
+        private Texture2D drawable_texture;
+        [SerializeField]
+        private byte[] rawData;
 
         Vector2 previous_drag_position;
         Color[] clean_colours_array;
@@ -42,7 +44,6 @@ namespace FreeDraw
         Color32[] cur_colors;
         bool mouse_was_previously_held_down = false;
         bool no_drawing_on_current_drag = false;
-
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -133,11 +134,30 @@ namespace FreeDraw
 
 
 
+        
+        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            // WhiteBoard obj = transform.parent.GetComponent<WhiteBoard>();
+            // if (stream.isWriting && obj.IsOn)
+            // {
+            //     rawData = drawable_texture.EncodeToPNG();
+            //     stream.SendNext(rawData);
+            // }
+            // else
+            // {
+            //     rawData = (byte[])stream.ReceiveNext();
+            //     if (rawData.Length > 0)
+            //     {
+            //         drawable_texture.LoadImage(rawData);
+            //     }
+            // }
+        }
 
         // This is where the magic happens.
         // Detects when user is left clicking, which then call the appropriate function
         void Update()
         {
+            transform.parent.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.player);
             // Is the user holding down the left mouse button?
             bool mouse_held_down = Input.GetMouseButton(0);
             if (mouse_held_down && !no_drawing_on_current_drag)
@@ -149,7 +169,6 @@ namespace FreeDraw
                 Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
                 if (hit != null && hit.transform != null)
                 {
-                Debug.Log("MASUKKKKKKKK");
                     // We're over the texture we're drawing on!
                     // Use whatever function the current brush is
                     current_brush(mouse_world_position);

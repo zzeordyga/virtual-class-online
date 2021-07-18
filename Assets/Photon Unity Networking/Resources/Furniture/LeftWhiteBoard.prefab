@@ -1568,6 +1568,7 @@ MonoBehaviour:
   playerCam: {fileID: 1989292980657129417, guid: 4135000b164d2ff4781bd239e327e8b5,
     type: 3}
   whiteboardCam: {fileID: 4953722979252465219}
+  drawable_texture: {fileID: 2800000, guid: a33b8a6cf583c534b83219b0504884d0, type: 3}
 --- !u!114 &1180937895651285225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1587,9 +1588,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 7425250613710961212}
+  - {fileID: 5489589374242599072}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
