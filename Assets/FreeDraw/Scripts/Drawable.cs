@@ -149,6 +149,7 @@ namespace FreeDraw
                 Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
                 if (hit != null && hit.transform != null)
                 {
+                Debug.Log("MASUKKKKKKKK");
                     // We're over the texture we're drawing on!
                     // Use whatever function the current brush is
                     current_brush(mouse_world_position);
