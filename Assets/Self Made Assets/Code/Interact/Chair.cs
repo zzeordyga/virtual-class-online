@@ -34,7 +34,6 @@ public class Chair : Interactable
         MouseLook ml = player.GetComponentInChildren<MouseLook>();
         if (!ReferenceEquals(ml, null))
         {
-            Debug.Log("Please kepanggil");
             ml.ClampRotation(min, max);
         }
     }

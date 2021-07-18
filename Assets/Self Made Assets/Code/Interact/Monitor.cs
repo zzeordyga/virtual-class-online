@@ -5,6 +5,8 @@ using UnityEngine;
 public class Monitor : Interactable
 {
     private bool isOn = false;
+    private bool isMainScreen = false;
+
     public override string GetDescription(GameObject player)
     {
         Animator playerAnimator = player.GetComponent<Animator>();
@@ -27,6 +29,7 @@ public class Monitor : Interactable
                 ScreenUI.SetActive(true);
                 if (!ReferenceEquals(ml, null))
                 {
+                    GetComponentInChildren<AgoraShareScreen>().SetupUI();
                     ml.Lock();
                     ml.EnableCursor();
                 }

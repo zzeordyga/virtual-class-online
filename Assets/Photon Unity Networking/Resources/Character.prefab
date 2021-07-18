@@ -8195,7 +8195,7 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: Cleaning
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Sitting
   m_SynchronizeLayers:
   - SynchronizeType: 0

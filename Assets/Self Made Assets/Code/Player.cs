@@ -39,7 +39,11 @@ public class Player : Photon.MonoBehaviour
         }
 
         VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
-        if (!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
+        if (!ReferenceEquals(vgc, null))
+        {
+            Debug.Log("Adding a new video");
+            vgc.AddVideo();
+        }
 
     }
 

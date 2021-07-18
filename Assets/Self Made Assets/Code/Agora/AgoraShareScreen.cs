@@ -9,7 +9,7 @@ using AgoraNative;
 /// <summary>
 /// this is an example of using ScreenSharing APIs for Desktops
 /// </summary>
-public class AgoraShareScreen : PlayerViewControllerBase
+public class AgoraShareScreen : MonoBehaviour
 {
 
     Dropdown WindowOptionDropdown;
@@ -20,14 +20,21 @@ public class AgoraShareScreen : PlayerViewControllerBase
     List<uint> MacDisplays;
 #endif
     int CurrentDisplay = 0;
+    private IRtcEngine mRtcEngine = null;
 
-    protected override void SetupUI()
+    private void Start()
     {
-        base.SetupUI();
+        SetupUI();
+        mRtcEngine = FindObjectOfType<GameManager>().RtcEngine;
+    }
 
+    public void SetupUI()
+    {
         Dropdown dropdown = GameObject.Find("Dropdown").GetComponent<Dropdown>();
         if (dropdown != null)
         {
+            Debug.Log("Dropdown ga null");
+            Debug.Log("Parentnya Dropdown : " + dropdown.transform.parent.transform.parent.transform.parent.name);
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             MacDisplays = AgoraNativeBridge.GetMacDisplayIds();
             WindowList list = AgoraNativeBridge.GetMacWindowList();
@@ -52,9 +59,14 @@ public class AgoraShareScreen : PlayerViewControllerBase
             AgoraNativeBridge.GetDesktopWindowHandlesAndTitles(out winWinIdList);
             if (winWinIdList != null)
             {
+                Debug.Log(dropdown.options);
+
                 dropdown.options = (winWinIdList.Select(w =>
                     new Dropdown.OptionData(string.Format("{0, -20} | {1}",
                         w.Key.Substring(0, System.Math.Min(w.Key.Length, 20)), w.Value))).ToList());
+
+                Debug.Log(dropdown.options);
+
             }
 #endif
             WindowOptionDropdown = dropdown;
@@ -63,24 +75,28 @@ public class AgoraShareScreen : PlayerViewControllerBase
         Button button = GameObject.Find("ShareWindowButton").GetComponent<Button>();
         if (button != null)
         {
+            Debug.Log("Button ga null");
             button.onClick.AddListener(OnShareWindowClick);
         }
 
         button = GameObject.Find("ShareDisplayButton").GetComponent<Button>();
         if (button != null)
         {
+            Debug.Log("Button ga null");
             button.onClick.AddListener(ShareDisplayScreen);
         }
 
         button = GameObject.Find("StopShareButton").GetComponent<Button>();
         if (button != null)
         {
+            Debug.Log("Button ga null");
             button.onClick.AddListener(() => { mRtcEngine.StopScreenCapture(); });
         }
 
         GameObject quad = GameObject.Find("DisplayPlane");
         if (ReferenceEquals(quad, null))
         {
+            Debug.Log("Display ga null");
             Debug.Log("Error: failed to find DisplayPlane");
             return;
         }

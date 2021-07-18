@@ -37,10 +37,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Text appIDText;
     private IRtcEngine mRtcEngine = null;
+    public IRtcEngine RtcEngine
+    {
+        get { return mRtcEngine; }
+    }
     private string mChannel = "";
     private string tokenURL = "https://virtual-class-online.herokuapp.com/access_token?";
-    protected Dictionary<uint, VideoSurface> UserVideoDict = new Dictionary<uint, VideoSurface>();
-    protected const string SelfVideoName = "MyView";
 
     private static bool _initialized = false;
 
@@ -59,7 +61,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         CheckAppId(); //  Agora App Id
-        //LoadLastChannel(); //  Load a default channel for each player (Not Needed)
     }
 
     void Update()
@@ -71,8 +72,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        //PhotonNetwork.ConnectUsingSettings(VersionName);
-        //SpawnPlayer();
     }
 
     #region Photon Methods
@@ -89,8 +88,7 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default))
         {
             Debug.Log("create room successfully sent");
-            // TODO : Create channel using backend Node.js (or this might work! hopefully!!)
-            HandleSceneChange(roomName);
+            CreateAgoraChannel(roomName);
         }
         else
         {
@@ -103,9 +101,8 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.JoinRoom(roomName))
         {
             Debug.Log("Joined room successfully");
-            HandleSceneChange(roomName);
+            JoinAgoraChannel(roomName);
         }
-        
     }
 
     private void OnPhotonCreateRoomFailed(object[] codeAndMessage)
@@ -115,15 +112,13 @@ public class GameManager : MonoBehaviour
 
     private void OnCreatedRoom()
     {
-        Debug.Log("Length of Rooms : " + PhotonNetwork.GetRoomList().Length);
-        Debug.Log("Room create successfully");
+        //Debug.Log("Room create successfully");
         PhotonNetwork.LoadLevel("ClassScene");
     }
 
     private void OnJoinedRoom()
     {
-        Debug.Log("Masuk on Joined Room");
-        //PhotonNetwork.LoadLevel("ClassScene");
+        //Debug.Log("Joined A Room Successfully (OnJoinedRoom)");
     }
 
     // Done when user is joining a room
@@ -140,7 +135,7 @@ public class GameManager : MonoBehaviour
             }
         }
         //playerPrefab.transform.Find("CharacterCamera").gameObject.SetActive(false);
-        PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0, 1.2f, 15f), Quaternion.identity, 0);
     }
 
     #endregion
@@ -155,18 +150,6 @@ public class GameManager : MonoBehaviour
             app.UnloadEngine();
         }
         IRtcEngine.Destroy();
-    }
-
-    // This is not needed because we are going to always make users choose the channel
-    private void LoadLastChannel()
-    {
-        string channel = PlayerPrefs.GetString("ChannelName");
-        if (!string.IsNullOrEmpty(channel))
-        {
-            GameObject go = GameObject.Find("ChannelName");
-            // TODO : Create or Join room when clicking a room list
-
-        }
     }
 
     private void CheckAppId()
@@ -221,7 +204,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Call when successfully logged in
-    public void HandleSceneChange(string channelName)
+    public void JoinAgoraChannel(string channelName)
     {
         if (string.IsNullOrEmpty(channelName))
         {
@@ -244,15 +227,31 @@ public class GameManager : MonoBehaviour
         LoadEngine(AppID);
 
         Join(channelName);
+    }
 
-        //app.OnViewControllerFinish += OnViewControllerFinish;
-        //// load engine
-        //app.LoadEngine(AppID);
-        //// join channel and jump to next scene
-        //app.Join(channelName);
-        //SceneManager.sceneLoaded += OnLevelFinishedLoading; // configure GameObject after scene is loaded
-        //SceneManager.LoadScene(SceneEnum.ClassScene.ToString(), LoadSceneMode.Single);
+    public void CreateAgoraChannel(string channelName)
+    {
+        if (string.IsNullOrEmpty(channelName))
+        {
+            Debug.LogError("Channel name can not be empty!");
+            return;
+        }
 
+        if (!_initialized)
+        {
+            Debug.LogError("AppID null or app is not initialized properly!");
+            return;
+        }
+
+        Debug.Log("Handling it perfectly");
+
+        //app = new AgoraShareScreen();
+
+        //if (app == null) return;
+
+        LoadEngine(AppID);
+
+        Create(channelName);
     }
 
     public void LoadEngine(string appId)
@@ -274,6 +273,40 @@ public class GameManager : MonoBehaviour
         // enable log
         mRtcEngine.SetLogFilter(LOG_FILTER.DEBUG | LOG_FILTER.INFO | LOG_FILTER.WARNING | LOG_FILTER.ERROR | LOG_FILTER.CRITICAL);
     }
+    
+    public void Create(string channel)
+    {
+        Debug.Log("calling join (channel = " + channel + ")");
+
+        if (mRtcEngine == null)
+            return;
+
+        mChannel = channel;
+
+        // set callbacks (optional)
+        mRtcEngine.OnJoinChannelSuccess = OnJoinChannelSuccess;
+        mRtcEngine.OnUserJoined = OnUserJoined;
+        //mRtcEngine.OnUserOffline = OnUserOffline;
+        //mRtcEngine.OnVideoSizeChanged = OnVideoSizeChanged;
+        // Calling virtual setup function
+        PrepareToJoin();
+
+        // join channel by key (sample)
+        //mRtcEngine.JoinChannelByKey("00669c9d55ce62e4a3384886a8b1de3261dIACiuB5WpMn+Vq/Tt0KxU17RWGm1/NZw7CAV09wQLtqJzDLRTXgAAAAAEACqPfBqvn/jYAEAAQC+f+Ng", channel, "", 0);
+
+        // join channel (the real way)
+        Debug.Log("Mau bikin channel nich, namanya : " + mChannel);
+
+        AgoraChannel newChannel = mRtcEngine.CreateChannel(mChannel);
+
+        if (!ReferenceEquals(newChannel, null))
+        {
+            Debug.Log("Retrieving the token!");
+            GetAgoraToken(newChannel);
+        }
+
+        Debug.Log("initializeEngine done");
+    }
 
     public void Join(string channel)
     {
@@ -286,7 +319,7 @@ public class GameManager : MonoBehaviour
 
         // set callbacks (optional)
         mRtcEngine.OnJoinChannelSuccess = OnJoinChannelSuccess;
-        //mRtcEngine.OnUserJoined = OnUserJoined;
+        mRtcEngine.OnUserJoined = OnUserJoined;
         //mRtcEngine.OnUserOffline = OnUserOffline;
         //mRtcEngine.OnVideoSizeChanged = OnVideoSizeChanged;
         // Calling virtual setup function
@@ -296,15 +329,7 @@ public class GameManager : MonoBehaviour
         //mRtcEngine.JoinChannelByKey("00669c9d55ce62e4a3384886a8b1de3261dIACiuB5WpMn+Vq/Tt0KxU17RWGm1/NZw7CAV09wQLtqJzDLRTXgAAAAAEACqPfBqvn/jYAEAAQC+f+Ng", channel, "", 0);
 
         // join channel (the real way)
-        if (mRtcEngine.JoinChannel(mChannel, null, 0) != 0)
-        {
-            Debug.Log("Mau bikin channel nich, namanya : " + mChannel);
-
-            AgoraChannel newChannel = mRtcEngine.CreateChannel(mChannel);
-
-            if (!ReferenceEquals(newChannel, null)) GetAgoraToken(newChannel);
-            else Debug.Log("Anjing null ternyata");
-        }
+        GetAgoraToken(mChannel);
 
         Debug.Log("initializeEngine done");
     }
@@ -314,6 +339,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     protected virtual void PrepareToJoin()
     {
+        mRtcEngine.SetChannelProfile(CHANNEL_PROFILE.CHANNEL_PROFILE_LIVE_BROADCASTING);
+        mRtcEngine.SetClientRole(CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER);
+        mRtcEngine.EnableAudio();
         // enable video
         mRtcEngine.EnableVideo();
         // allow camera output callback
@@ -347,14 +375,19 @@ public class GameManager : MonoBehaviour
 
     public void GetAgoraToken(AgoraChannel newChannel)
     {
-        StartCoroutine(GetToken(newChannel));
+        string channelName = newChannel.ChannelId().Substring(0, newChannel.ChannelId().Length - 1);
+        StartCoroutine(GetToken(channelName));
     }
 
-    IEnumerator GetToken(AgoraChannel channel)
+    public void GetAgoraToken(string channelName)
+    {
+        StartCoroutine(GetToken(channelName));
+    }
+
+    IEnumerator GetToken(string channelName)
     {
         uint uid = 0;
 
-        string channelName = channel.ChannelId().Substring(0, channel.ChannelId().Length-1);
         Debug.Log("Channel name : " + channelName);
         Debug.Log("Channel name length : " + channelName.Length);
 
@@ -374,46 +407,44 @@ public class GameManager : MonoBehaviour
             string token = tokenObject.token;
 
             Debug.Log("Token : " + token);
-            mRtcEngine.JoinChannelByKey(token, channelName, "", 0);
+            Debug.Log("Joining result : " + mRtcEngine.JoinChannelByKey(token, channelName, "", 0));
+            mRtcEngine.EnableAudio();
+            mRtcEngine.EnableVideo();
+            mRtcEngine.EnableVideoObserver();
         }
     }
 
     #endregion
 
     #region Agora Engine Callbacks
+
+    private bool joinedRoom = false;
+
     // implement engine callbacks
     protected virtual void OnJoinChannelSuccess(string channelName, uint uid, int elapsed)
     {
         Debug.Log("JoinChannelSuccessHandler: uid = " + uid);
+        joinedRoom = true;
     }
+
+    //private void LateUpdate()
+    //{
+    //    if (joinedRoom)
+    //    {
+    //        VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
+    //        if (vgc != null)
+    //        {
+    //            joinedRoom = false;
+    //            vgc.AddVideo();
+    //        }
+    //    }
+    //}
 
     // When a remote user joined, this delegate will be called. Typically
     // create a GameObject to render video on it
-    protected virtual void OnUserJoined(uint uid, int elapsed)
+    protected void OnUserJoined(uint uid, int elapsed)
     {
         Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
-
-        // find a game object to render video stream from 'uid'
-        GameObject go = GameObject.Find(uid.ToString());
-        if (!ReferenceEquals(go, null))
-        {
-            return; // reuse
-        }
-
-        // create a GameObject and assign to this new user
-        VideoSurface videoSurface = makeImageSurface(uid.ToString());
-        if (!ReferenceEquals(videoSurface, null))
-        {
-            // configure videoSurface
-            videoSurface.SetForUser(uid);
-            videoSurface.SetEnable(true);
-            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-            videoSurface.SetGameFps(30);
-            videoSurface.EnableFilpTextureApply(enableFlipHorizontal: true, enableFlipVertical: false);
-            UserVideoDict[uid] = videoSurface;
-            Vector2 pos = AgoraUIUtils.GetRandomPosition(100);
-            videoSurface.transform.localPosition = new Vector3(pos.x, pos.y, 0);
-        }
     }
 
     // When remote user is offline, this delegate will be called. Typically
@@ -422,35 +453,35 @@ public class GameManager : MonoBehaviour
     {
         // remove video stream
         Debug.Log("onUserOffline: uid = " + uid + " reason = " + reason);
-        if (UserVideoDict.ContainsKey(uid))
-        {
-            var surface = UserVideoDict[uid];
-            surface.SetEnable(false);
-            UserVideoDict.Remove(uid);
-            GameObject.Destroy(surface.gameObject);
-        }
+        //if (UserVideoDict.ContainsKey(uid))
+        //{
+        //    var surface = UserVideoDict[uid];
+        //    surface.SetEnable(false);
+        //    UserVideoDict.Remove(uid);
+        //    GameObject.Destroy(surface.gameObject);
+        //}
     }
 
     protected virtual void OnVideoSizeChanged(uint uid, int width, int height, int rotation)
     {
         Debug.LogWarningFormat("uid:{3} OnVideoSizeChanged width = {0} height = {1} for rotation:{2}", width, height, rotation, uid);
 
-        if (UserVideoDict.ContainsKey(uid))
-        {
-            GameObject go = UserVideoDict[uid].gameObject;
-            Vector2 v2 = new Vector2(width, height);
-            RawImage image = go.GetComponent<RawImage>();
-            //if (_enforcing360p)
-            //{
-            //    v2 = AgoraUIUtils.GetScaledDimension(width, height, 360f);
-            //}
+        //if (UserVideoDict.ContainsKey(uid))
+        //{
+        //    GameObject go = UserVideoDict[uid].gameObject;
+        //    Vector2 v2 = new Vector2(width, height);
+        //    RawImage image = go.GetComponent<RawImage>();
+        //    //if (_enforcing360p)
+        //    //{
+        //    //    v2 = AgoraUIUtils.GetScaledDimension(width, height, 360f);
+        //    //}
 
-            if (IsPortraitOrientation(rotation))
-            {
-                v2 = new Vector2(v2.y, v2.x);
-            }
-            image.rectTransform.sizeDelta = v2;
-        }
+        //    if (IsPortraitOrientation(rotation))
+        //    {
+        //        v2 = new Vector2(v2.y, v2.x);
+        //    }
+        //    image.rectTransform.sizeDelta = v2;
+        //}
     }
 
     bool IsPortraitOrientation(int rotation)
@@ -458,39 +489,32 @@ public class GameManager : MonoBehaviour
         return rotation == 90 || rotation == 270;
     }
 
+    #endregion
 
-    protected VideoSurface makeImageSurface(string goName)
+    #region Other Utilities
+    public static UInt32 GetInt64HashCode(string strText)
     {
-        GameObject go = new GameObject();
-
-        if (go == null)
+        UInt32 hashCode = 0;
+        if (!string.IsNullOrEmpty(strText))
         {
-            return null;
+            //Unicode Encode Covering all characterset
+            byte[] byteContents = Encoding.Unicode.GetBytes(strText);
+            System.Security.Cryptography.SHA256 hash =
+            new System.Security.Cryptography.SHA256CryptoServiceProvider();
+            byte[] hashText = hash.ComputeHash(byteContents);
+            //32Byte hashText separate
+            //hashCodeStart = 0~7  8Byte
+            //hashCodeMedium = 8~23  8Byte
+            //hashCodeEnd = 24~31  8Byte
+            //and Fold
+            UInt32 hashCodeStart = BitConverter.ToUInt32(hashText, 0);
+            UInt32 hashCodeMedium = BitConverter.ToUInt32(hashText, 8);
+            UInt32 hashCodeEnd = BitConverter.ToUInt32(hashText, 24);
+            hashCode = hashCodeStart ^ hashCodeMedium ^ hashCodeEnd;
         }
-
-        go.name = goName;
-
-        // to be renderered onto
-        RawImage image = go.AddComponent<RawImage>();
-        image.rectTransform.sizeDelta = new Vector2(1, 1);// make it almost invisible
-
-        // make the object draggable
-        go.AddComponent<UIElementDragger>();
-        GameObject canvas = GameObject.Find("Canvas");
-        if (canvas != null)
-        {
-            go.transform.SetParent(canvas.transform);
-        }
-        // set up transform
-        go.transform.Rotate(0f, 0.0f, 180.0f);
-        Vector2 v2 = AgoraUIUtils.GetRandomPosition(100);
-        go.transform.localPosition = new Vector3(v2.x, v2.y, 0);
-        go.transform.localScale = Vector3.one;
-
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
+        return (hashCode);
     }
+
     #endregion
 
 }

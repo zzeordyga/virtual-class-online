@@ -12,6 +12,9 @@ public class Bridge : MonoBehaviour
 {
     SaltInfo objectSalt;
 
+    [SerializeField]
+    private GameObject loginCanvas;
+
     public TMP_InputField usernameField;
     public TMP_InputField passwordField;
     
@@ -89,6 +92,7 @@ public class Bridge : MonoBehaviour
                     usernameField.text = "";
                     passwordField.text = "";
                 }
+                //loginCanvas.SetActive(false);
             }
         }
     }
