@@ -22,13 +22,14 @@ public class Chair : Interactable
     {
         Animator playerAnimator = player.GetComponent<Animator>();
 
-        Debug.Log("Before -> Player : " + player.transform.position);
+        Debug.Log(player.transform.name);
+
+        player.GetComponent<CharacterController>().enabled = false;
 
         player.transform.position = transform.Find("SitCheck").position - new Vector3(0f, 1.2f, 0f);
 
-        Debug.Log("After -> Player : " + player.transform.position);
 
-        if(!ReferenceEquals(playerAnimator, null)) playerAnimator.SetBool("Sitting", true);
+        if (!ReferenceEquals(playerAnimator, null)) playerAnimator.SetBool("Sitting", true);
 
         MouseLook ml = player.GetComponentInChildren<MouseLook>();
         if (!ReferenceEquals(ml, null))

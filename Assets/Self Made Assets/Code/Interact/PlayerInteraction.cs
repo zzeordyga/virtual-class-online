@@ -36,6 +36,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (playerAnimator.GetBool("Sitting")) {
                 playerAnimator.SetBool("Sitting", false);
+                transform.GetComponent<CharacterController>().enabled = true;
             }
         }
 

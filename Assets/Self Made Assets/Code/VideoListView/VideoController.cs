@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class VideoController : MonoBehaviour
 {
     private bool camAvailable;
     private WebCamTexture webcam;
     private Texture defaultBackground;
+    [SerializeField] private TMP_Text playerName;
 
     public RawImage background;
     public AspectRatioFitter fit;
 
     private void Start()
     {
+        playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
+
         defaultBackground = background.texture;
 
         WebCamDevice[] devices = WebCamTexture.devices;
