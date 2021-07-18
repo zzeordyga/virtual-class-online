@@ -43,7 +43,6 @@ public class LobbyNetwork : MonoBehaviour
 
     private void OnJoinedLobby()
     {
-        print("Joined lobby");
         menuController.SwitchMenu(3);
     }
 }

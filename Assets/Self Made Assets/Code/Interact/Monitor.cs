@@ -8,7 +8,6 @@ public class Monitor : Interactable
     public override string GetDescription(GameObject player)
     {
         Animator playerAnimator = player.GetComponent<Animator>();
-        Debug.Log(playerAnimator.GetBool("Sitting"));
         if (playerAnimator.GetBool("Sitting") == false)
         {
             return "";

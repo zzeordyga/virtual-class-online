@@ -14,6 +14,13 @@ public class VideoController : MonoBehaviour
     public RawImage background;
     public AspectRatioFitter fit;
 
+    private Player _player;
+    public Player Player
+    {
+        get { return _player; }
+        set { _player = value; }
+    }
+
     private void Start()
     {
         playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
@@ -21,6 +28,8 @@ public class VideoController : MonoBehaviour
         defaultBackground = background.texture;
 
         WebCamDevice[] devices = WebCamTexture.devices;
+
+        Debug.Log("Masuk kamera gan");
 
         if (devices.Length == 0)
         {
@@ -51,14 +60,18 @@ public class VideoController : MonoBehaviour
     {
         if (!camAvailable) return;
 
-        float ratio = (float)webcam.width / (float)webcam.height;
-        fit.aspectRatio = ratio;
+        if(true)
+        {
+            float ratio = (float)webcam.width / (float)webcam.height;
+            fit.aspectRatio = ratio;
 
-        float scaleY = webcam.videoVerticallyMirrored ? -1f : 1f;
-        background.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
+            float scaleY = webcam.videoVerticallyMirrored ? -1f : 1f;
+            background.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
 
-        int orient = -webcam.videoRotationAngle;
-        background.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
+            int orient = -webcam.videoRotationAngle;
+            background.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
+        }
 
     }
+
 }

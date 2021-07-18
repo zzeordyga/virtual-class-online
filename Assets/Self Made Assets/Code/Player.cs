@@ -36,9 +36,11 @@ public class Player : Photon.MonoBehaviour
         {
             playerCamera.SetActive(true);
             playerAnimator = GetComponent<Animator>();
-            VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
-            if(!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
         }
+
+        VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
+        if (!ReferenceEquals(vgc, null)) vgc.AddVideo(this);
+
     }
 
     // Update is called once per frame
