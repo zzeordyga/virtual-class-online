@@ -1037,7 +1037,7 @@ MonoBehaviour:
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 8907939070648203831}
+  - {fileID: 5817068554529026219}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -1247,6 +1247,7 @@ MonoBehaviour:
     m_Bits: 1024
   Reset_Canvas_On_Play: 1
   Reset_Colour: {r: 1, g: 1, b: 1, a: 1}
+  rawData: 
 --- !u!212 &8907939070648203831
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1885,7 +1886,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8522437391435986048}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &8944854359092784034
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class Locker : Interactable
 
     public override void Interact(GameObject player)
     {
-        transform.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.player);
+        transform.GetComponent<PhotonView>().RequestOwnership();
         GameObject lockerDoor = transform.Find("RotateAngle").gameObject;
         
         if (!isOpen)
@@ -28,7 +28,7 @@ public class Locker : Interactable
 
     private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("Hello");
+        Debug.Log("Locker Serialize");
         if (stream.isWriting)
         {
             stream.SendNext(isOpen);

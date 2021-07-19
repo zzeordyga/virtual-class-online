@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace FreeDraw
 {
+
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Collider2D))]  // REQUIRES A COLLIDER2D to function
     // 1. Attach this to a read/write enabled sprite image
@@ -12,6 +13,12 @@ namespace FreeDraw
     // 4. Hold down left mouse to draw on this texture!
     public class Drawable : MonoBehaviour
     {
+        private bool isOn = false;
+        public bool IsOn
+        {
+            get { return isOn; }
+            set { isOn = value; }
+        }
         // PEN COLOUR
         public static Color Pen_Colour = Color.red;     // Change these to change the default drawing settings
         // PEN WIDTH (actually, it's a radius, in pixels)
@@ -128,71 +135,76 @@ namespace FreeDraw
             // PenBrush is the NAME of the method we want to set as our current brush
             current_brush = PenBrush;
         }
-//////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-        
-        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            WhiteBoard obj = transform.parent.GetComponent<WhiteBoard>();
-            if (stream.isWriting && obj.IsOn == 2)
-            {
-                rawData = drawable_texture.EncodeToPNG();
-                stream.SendNext(rawData);
-                obj.IsOn = 0;
-            }
-            else
-            {
-                rawData = (byte[])stream.ReceiveNext();
-                if (rawData.Length > 0)
-                {
-                    drawable_texture.LoadImage(rawData);
-                }
-            }
-        }
+        //////////////////////////////////////////////////////////////////////////////
 
         // This is where the magic happens.
         // Detects when user is left clicking, which then call the appropriate function
+
+        private Vector3 mouseInput = new Vector3(0f, 0f, 0f);
+
+        private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            Debug.Log("Whiteboard Serialize");
+            if (stream.isWriting)
+            {
+                stream.SendNext(mouseInput);
+            }
+            else
+            {
+                mouseInput = (Vector3)stream.ReceiveNext();
+                Debug.Log("Receive Pos : " + mouseInput);
+            }
+        }
+
         void Update()
         {
-            // Is the user holding down the left mouse button?
-            bool mouse_held_down = Input.GetMouseButton(0);
-            if (mouse_held_down && !no_drawing_on_current_drag)
+            WhiteBoard wb = transform.parent.GetComponent<WhiteBoard>();
+            if (!transform.parent.GetComponent<PhotonView>().isMine)
             {
-                // Convert mouse coordinates to world coordinates
-                Vector2 mouse_world_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-                // Check if the current mouse position overlaps our image
-                Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
-                if (hit != null && hit.transform != null)
+                Debug.Log("Auto Drawing...");
+                Vector2 mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
+                Debug.Log("Draw Pos : " + mouse_world_position);
+                current_brush(mouse_world_position);
+            } else if (transform.parent.GetComponent<PhotonView>().isMine && wb.IsOn)
+            {
+                // Is the user holding down the left mouse button?
+                bool mouse_held_down = Input.GetMouseButton(0);
+                if (mouse_held_down && !no_drawing_on_current_drag)
                 {
-                    // We're over the texture we're drawing on!
-                    // Use whatever function the current brush is
-                    current_brush(mouse_world_position);
-                }
+                    Debug.Log("Drawing...");
+                    // Convert mouse coordinates to world coordinates
+                    mouseInput = Input.mousePosition;
+                    Vector2 mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
 
-                else
-                {
-                    // We're not over our destination texture
-                    previous_drag_position = Vector2.zero;
-                    if (!mouse_was_previously_held_down)
+                    // Check if the current mouse position overlaps our image
+                    Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
+                    if (hit != null && hit.transform != null)
                     {
-                        // This is a new drag where the user is left clicking off the canvas
-                        // Ensure no drawing happens until a new drag is started
-                        no_drawing_on_current_drag = true;
+                        // We're over the texture we're drawing on!
+                        // Use whatever function the current brush is
+                        current_brush(mouse_world_position);
+                    }
+
+                    else
+                    {
+                        // We're not over our destination texture
+                        previous_drag_position = Vector2.zero;
+                        if (!mouse_was_previously_held_down)
+                        {
+                            // This is a new drag where the user is left clicking off the canvas
+                            // Ensure no drawing happens until a new drag is started
+                            no_drawing_on_current_drag = true;
+                        }
                     }
                 }
+                // Mouse is released
+                else if (!mouse_held_down)
+                {
+                    previous_drag_position = Vector2.zero;
+                    no_drawing_on_current_drag = false;
+                }
+                mouse_was_previously_held_down = mouse_held_down;
             }
-            // Mouse is released
-            else if (!mouse_held_down)
-            {
-                previous_drag_position = Vector2.zero;
-                no_drawing_on_current_drag = false;
-            }
-            mouse_was_previously_held_down = mouse_held_down;
         }
 
 
