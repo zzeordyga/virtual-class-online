@@ -315,7 +315,8 @@ public class GameManager : Photon.MonoBehaviour
         if (!ReferenceEquals(newChannel, null))
         {
             Debug.Log("Retrieving the token!");
-            GetAgoraToken(newChannel.ChannelId());
+            //GetAgoraToken(newChannel.ChannelId());
+            GetAgoraToken(mChannel);
         }
 
         Debug.Log("initializeEngine done");
@@ -390,7 +391,8 @@ public class GameManager : Photon.MonoBehaviour
 
     IEnumerator GetToken(string channelName)
     {
-        channelName = channelName.Substring(0, channelName.Length - 1);
+        Debug.Log("Channel Name : " + channelName);
+        //channelName = channelName.Substring(0, channelName.Length - 1);
         uint uid;
         //uid = Convert.ToUInt32(Math.Abs(channelName.GetHashCode()) % 1000) % 1000;
         uid = 0;

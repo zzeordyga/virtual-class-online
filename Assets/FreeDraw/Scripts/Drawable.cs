@@ -150,12 +150,10 @@ namespace FreeDraw
             if (stream.isWriting)
             {
                 stream.SendNext(mouse_world_position);
-                stream.SendNext(current_brush);
             }
             else
             {
                 mouse_world_position = (Vector2)stream.ReceiveNext();
-                current_brush = (Brush_Function)stream.ReceiveNext();
             }
         }
 

@@ -105,7 +105,8 @@ public class AgoraShareScreen : MonoBehaviour
         {
             button.onClick.AddListener(() =>
             {
-                transform.parent.gameObject.GetComponent<Monitor>().Interact();
+                //ini butuh player sih
+                //transform.parent.gameObject.GetComponent<Monitor>().Interact();
             });
         }
 
