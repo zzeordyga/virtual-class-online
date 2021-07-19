@@ -48,6 +48,7 @@ public class PlayerInteraction : MonoBehaviour
                 playerCamera = c.gameObject.GetComponent<Camera>();
             }
         }
+
         //playerCamera = transform.Find("CharacterCamera").GetComponent<Camera>();
         //Debug.DrawRay(playerCamera.transform.position, playerCamera.transform.forward * interactionDistance , Color.green);
         bool successHit = false;

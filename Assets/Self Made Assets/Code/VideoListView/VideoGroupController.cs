@@ -19,19 +19,19 @@ public class VideoGroupController : MonoBehaviour
 
     protected Dictionary<uint, VideoSurface> UserVideoDict = new Dictionary<uint, VideoSurface>();
 
-    public void AddVideo(uint uid, bool isLocalUser)
+    public VideoSurface AddVideo(uint uid, bool isLocalUser)
     {
         if (UserVideoDict.ContainsKey(uid))
         {
             Debug.Log("User is logged in");
-            return;
+            return null;
         }
 
         GameObject videoWindow = Instantiate(video);
         if (videoWindow == null)
         {
             Debug.LogError("CreateUserVideoSurface() - newUserVideoIsNull");
-            return;
+            return null;
         }
         videoWindow.name = uid.ToString();
         videoWindow.transform.SetParent(this.transform, false);
@@ -43,7 +43,7 @@ public class VideoGroupController : MonoBehaviour
         if (newVideoSurface == null)
         {
             Debug.LogError("CreateUserVideoSurface() - VideoSurface component is null on newly joined user");
-            return;
+            return null;
         }
 
         if (isLocalUser == false)
@@ -70,6 +70,8 @@ public class VideoGroupController : MonoBehaviour
         //{
         //    Debug.Log("Ayo wath?????");
         //}
+
+        return newVideoSurface;
 
     }
 

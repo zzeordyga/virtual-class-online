@@ -37,13 +37,49 @@ public class Monitor : Interactable
                 }
             } else
             {
-                ScreenUI.SetActive(false);
                 if (!ReferenceEquals(ml, null))
                 {
                     GetComponentInChildren<AgoraShareScreen>().StopScreenCapture();
                     ml.Unlock();
                     ml.DisableCursor();
                 }
+                ScreenUI.SetActive(false);
+            }
+            isOn = !isOn;
+        }
+    }
+
+    public void Interact()
+    {
+        if (ReferenceEquals(player, null))
+            return;
+
+        Animator playerAnimator = player.GetComponent<Animator>();
+        if (playerAnimator.GetBool("Sitting"))
+        {
+            MouseLook ml = player.GetComponentInChildren<MouseLook>();
+            GameObject ScreenUI = transform.Find("UI").gameObject;
+            if (!isOn)
+            {
+                ScreenUI.SetActive(true);
+                if (!ReferenceEquals(ml, null))
+                {
+                    GetComponentInChildren<AgoraShareScreen>().SetupUI();
+                    ml.Lock();
+                    ml.EnableCursor();
+                }
+            }
+            else
+            {
+
+                if (!ReferenceEquals(ml, null))
+                {
+                    GetComponentInChildren<AgoraShareScreen>().StopScreenCapture();
+                    ml.Unlock();
+                    ml.DisableCursor();
+                    player = null;
+                }
+                ScreenUI.SetActive(false);
             }
             isOn = !isOn;
         }

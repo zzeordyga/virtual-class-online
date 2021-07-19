@@ -15,6 +15,8 @@ public class LobbyCanvas : MonoBehaviour
     {
         GameManager gm = FindObjectOfType<GameManager>();
 
+        Debug.Log("Lobby canvas name : " + roomName);
+
         if (!ReferenceEquals(gm, null)) gm.JoinRoom(roomName);
     }
 

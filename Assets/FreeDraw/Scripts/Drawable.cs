@@ -146,7 +146,6 @@ namespace FreeDraw
 
         private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            Debug.Log("Whiteboard Serialize");
             if (stream.isWriting)
             {
                 stream.SendNext(mouse_world_position);
@@ -172,7 +171,6 @@ namespace FreeDraw
                 bool mouse_held_down = Input.GetMouseButton(0);
                 if (mouse_held_down && !no_drawing_on_current_drag)
                 {
-                    Debug.Log("Drawing...");
                     // Convert mouse coordinates to world coordinates
                     mouseInput = Input.mousePosition;
                     mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);

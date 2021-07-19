@@ -29,11 +29,19 @@ public class AgoraShareScreen : MonoBehaviour
     private void Start()
     {
         SetupUI();
-        mRtcEngine = FindObjectOfType<GameManager>().RtcEngine;
+        mRtcEngine = FindObjectOfType<Player>().RtcEngine;
         // Creates a rectangular region of the screen.
         mRect = new Rect(0, 0, Screen.width, Screen.height);
         // Creates a texture of the rectangle you create.
         mTexture = new Texture2D((int)mRect.width, (int)mRect.height, TextureFormat.RGBA32, false);
+    }
+
+    private void Update()
+    {
+        if(mRtcEngine == null)
+        {
+            mRtcEngine = FindObjectOfType<Player>().RtcEngine;
+        }
     }
 
     public void SetupUI()
@@ -41,8 +49,6 @@ public class AgoraShareScreen : MonoBehaviour
         Dropdown dropdown = GameObject.Find("Dropdown").GetComponent<Dropdown>();
         if (dropdown != null)
         {
-            Debug.Log("Dropdown ga null");
-            Debug.Log("Parentnya Dropdown : " + dropdown.transform.parent.transform.parent.transform.parent.name);
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             MacDisplays = AgoraNativeBridge.GetMacDisplayIds();
             WindowList list = AgoraNativeBridge.GetMacWindowList();
@@ -67,7 +73,6 @@ public class AgoraShareScreen : MonoBehaviour
             AgoraNativeBridge.GetDesktopWindowHandlesAndTitles(out winWinIdList);
             if (winWinIdList != null)
             {
-                Debug.Log(dropdown.options);
 
                 dropdown.options = (winWinIdList.Select(w =>
                     new Dropdown.OptionData(string.Format("{0, -20} | {1}",
@@ -82,21 +87,18 @@ public class AgoraShareScreen : MonoBehaviour
         Button button = GameObject.Find("ShareWindowButton").GetComponent<Button>();
         if (button != null)
         {
-            Debug.Log("Button ga null");
             button.onClick.AddListener(OnShareWindowClick);
         }
 
         button = GameObject.Find("ShareDisplayButton").GetComponent<Button>();
         if (button != null)
         {
-            Debug.Log("Button ga null");
             button.onClick.AddListener(ShareDisplayScreen);
         }
 
         button = GameObject.Find("StopShareButton").GetComponent<Button>();
         if (button != null)
         {
-            Debug.Log("Button ga null");
             button.onClick.AddListener(() => { StopScreenCapture(); });
         }
 
@@ -106,7 +108,8 @@ public class AgoraShareScreen : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 //ini butuh player sih
-                //transform.parent.gameObject.GetComponent<Monitor>().Interact();
+                transform.parent.gameObject.GetComponent<Monitor>().Interact();
+                StopScreenCapture();
             });
         }
 

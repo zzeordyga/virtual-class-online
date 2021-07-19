@@ -28,7 +28,6 @@ public class Locker : Interactable
 
     private void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("Locker Serialize");
         if (stream.isWriting)
         {
             stream.SendNext(isOpen);

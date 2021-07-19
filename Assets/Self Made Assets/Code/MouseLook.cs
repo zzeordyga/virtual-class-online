@@ -77,8 +77,6 @@ public class MouseLook : MonoBehaviour
         MinRotation = min;
         MaxRotation = max;
 
-        Debug.Log("Min : " + MinRotation);
-        Debug.Log("Max : " + MaxRotation);
     }
 
     public void EnableCursor()
