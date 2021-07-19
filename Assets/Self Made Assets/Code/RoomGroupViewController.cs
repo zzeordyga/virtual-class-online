@@ -16,8 +16,6 @@ public class RoomGroupViewController : MonoBehaviour
     {
         RoomInfo[] rooms = PhotonNetwork.GetRoomList();
 
-        Debug.Log(PhotonNetwork.GetRoomList().Length);
-
         foreach (RoomInfo room in rooms)
         {
             RoomReceived(room);

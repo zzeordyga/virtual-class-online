@@ -17,7 +17,7 @@ public class Billboard : MonoBehaviour
     void Start()
     {
         if (cam == null) cam = Camera.main.transform;
-        playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
+        //playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
     }
 
     void LateUpdate()

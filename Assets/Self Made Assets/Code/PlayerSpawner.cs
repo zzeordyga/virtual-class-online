@@ -6,7 +6,6 @@ public class PlayerSpawner : MonoBehaviour
 {
     private void Awake()
     {
-        
         GameManager gm = FindObjectOfType<GameManager>();
         if(!ReferenceEquals(gm, null))
         {

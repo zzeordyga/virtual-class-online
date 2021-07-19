@@ -18,89 +18,65 @@ public class VideoGroupController : MonoBehaviour
     }
 
     protected Dictionary<uint, VideoSurface> UserVideoDict = new Dictionary<uint, VideoSurface>();
-    private VideoRawDataManager videoRawDataManager;
-    protected const string SelfVideoName = "MyView";
 
-    public void AddVideo()
+    public void AddVideo(uint uid, bool isLocalUser)
     {
-        string uid = PlayerNetwork.instance.PlayerInfo.UserId;
-        uint hashedUID = GameManager.GetInt64HashCode(uid);
+        if (UserVideoDict.ContainsKey(uid))
+        {
+            Debug.Log("User is logged in");
+            return;
+        }
 
         GameObject videoWindow = Instantiate(video);
-        videoWindow.transform.SetParent(transform, false);
-
-        // create a GameObject and assign to this new user
-        VideoSurface videoSurface = makeImageSurface(hashedUID.ToString(), videoWindow);
-        if (!ReferenceEquals(videoSurface, null))
+        if (videoWindow == null)
         {
-            // configure videoSurface
-            videoSurface.SetForUser(hashedUID);
-            videoSurface.SetEnable(true);
-            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.RawImage);
-            videoSurface.SetGameFps(30);
-            videoSurface.EnableFilpTextureApply(enableFlipHorizontal: true, enableFlipVertical: false);
-            UserVideoDict[hashedUID] = videoSurface;
+            Debug.LogError("CreateUserVideoSurface() - newUserVideoIsNull");
+            return;
         }
+        videoWindow.name = uid.ToString();
+        videoWindow.transform.SetParent(this.transform, false);
+        //videoWindow.transform.rotation = Quaternion.Euler(Vector3.right * -180);
+
+
+        // Update our VideoSurface to reflect new users
+        VideoSurface newVideoSurface = videoWindow.GetComponent<VideoSurface>();
+        if (newVideoSurface == null)
+        {
+            Debug.LogError("CreateUserVideoSurface() - VideoSurface component is null on newly joined user");
+            return;
+        }
+
+        if (isLocalUser == false)
+        {
+            newVideoSurface.SetForUser(uid);
+        }
+        newVideoSurface.SetGameFps(30);
+
+        // Update our "Content" container that holds all the newUserVideo image planes
+
+
+        //if (!ReferenceEquals(videoWindow, null))
+        //{
+        //    videoWindow.transform.SetParent(transform, false);
+
+        //    VideoSurface vs = videoWindow.GetComponent<VideoController>().Init(uid, isLocalUser);
+
+        //    if (!ReferenceEquals(vs, null))
+        //    {
+        //        UserVideoDict[uid] = vs;
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("Ayo wath?????");
+        //}
+
     }
 
-
-    protected VideoSurface makeImageSurface(string goName, GameObject videoWindow)
+    public void RemoveVideo(uint UiD)
     {
-        GameObject go = videoWindow.transform.Find("Screen").gameObject;
-
-        if (ReferenceEquals(go, null))
-        {
-            return null;
-        }
-
-        go.name = goName;
-
-        RawImage rawImage = go.GetComponent<RawImage>();
-        rawImage.rectTransform.sizeDelta = new Vector2(1, 1);// make it almost invisible
-
-        // set up transform
-        go.transform.Rotate(0f, 0.0f, 180.0f);
-
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
-    }
-
-    protected VideoSurface makeImageSurface(string goName)
-    {
-        GameObject go = new GameObject();
-
-        if (go == null)
-        {
-            return null;
-        }
-
-        go.name = goName;
-        // to be renderered onto
-        go.AddComponent<RawImage>();
-        // make the object draggable
-        go.AddComponent<UIElementDragger>();
-        GameObject canvas = GameObject.Find("VideoCanvas");
-        if (canvas != null)
-        {
-            go.transform.parent = canvas.transform;
-            Debug.Log("add video view");
-        }
-        else
-        {
-            Debug.Log("Canvas is null video view");
-        }
-        // set up transform
-        go.transform.Rotate(0f, 0.0f, 180.0f);
-        float xPos = Random.Range(Offset - Screen.width / 2f, Screen.width / 2f - Offset);
-        float yPos = Random.Range(Offset, Screen.height / 2f - Offset);
-        Debug.Log("position x " + xPos + " y: " + yPos);
-        go.transform.localPosition = new Vector3(xPos, yPos, 0f);
-        go.transform.localScale = new Vector3(3f, 4f, 1f);
-
-        // configure videoSurface
-        VideoSurface videoSurface = go.AddComponent<VideoSurface>();
-        return videoSurface;
+        UserVideoDict.Remove(UiD);
+        Destroy(GameObject.Find(UiD.ToString()));
     }
 
 }

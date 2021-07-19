@@ -21,7 +21,7 @@ public class PlayerViewControllerBase : IVideoChatClient
     protected bool remoteUserJoined = false;
     protected bool _enforcing360p = false; // the local view of the remote user resolution
 
-    private string tokenURL = "https://virtual-class-online.herokuapp.com/access_token?channel=test&uid=1234";
+    //private string tokenURL = "https://virtual-class-online.herokuapp.com/access_token?channel=test&uid=1234";
 
     public PlayerViewControllerBase()
     {

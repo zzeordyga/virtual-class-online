@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1368263336328774108}
   - component: {fileID: 6344708329009910507}
   m_Layer: 0
-  m_Name: Cube.010
+  m_Name: ProjectorScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

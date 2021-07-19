@@ -53,7 +53,6 @@ public class Bridge : MonoBehaviour
             objectSalt = JsonUtility.FromJson<SaltInfo>(uwr.downloadHandler.text);
                 
             string salt = objectSalt.Salt;
-            Debug.Log("Salt: " + salt);
             StartCoroutine(GetLogin(salt));
         }
     }
@@ -63,7 +62,6 @@ public class Bridge : MonoBehaviour
         string username = usernameField.text.ToUpper();
         string password = passwordField.text;
         string hashPassword = AES.General.EncryptToBase64(salt + username, password);
-        Debug.Log("Hash: " + hashPassword);
         WWWForm form = new WWWForm();
         form.AddField("userName", username);
         form.AddField("password", hashPassword);

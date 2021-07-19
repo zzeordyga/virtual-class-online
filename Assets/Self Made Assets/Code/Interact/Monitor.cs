@@ -5,7 +5,8 @@ using UnityEngine;
 public class Monitor : Interactable
 {
     private bool isOn = false;
-    private bool isMainScreen = false;
+
+    GameObject player = null;
 
     public override string GetDescription(GameObject player)
     {
@@ -19,6 +20,7 @@ public class Monitor : Interactable
 
     public override void Interact(GameObject player)
     {
+        this.player = player;
         Animator playerAnimator = player.GetComponent<Animator>();
         if (playerAnimator.GetBool("Sitting"))
         {
@@ -38,6 +40,7 @@ public class Monitor : Interactable
                 ScreenUI.SetActive(false);
                 if (!ReferenceEquals(ml, null))
                 {
+                    GetComponentInChildren<AgoraShareScreen>().StopScreenCapture();
                     ml.Unlock();
                     ml.DisableCursor();
                 }
@@ -45,4 +48,38 @@ public class Monitor : Interactable
             isOn = !isOn;
         }
     }
+
+    public void Interact()
+    {
+        if (player == null)
+            return;
+
+        Animator playerAnimator = player.GetComponent<Animator>();
+        if (playerAnimator.GetBool("Sitting"))
+        {
+            MouseLook ml = player.GetComponentInChildren<MouseLook>();
+            GameObject ScreenUI = transform.Find("UI").gameObject;
+            if (!isOn)
+            {
+                ScreenUI.SetActive(true);
+                if (!ReferenceEquals(ml, null))
+                {
+                    GetComponentInChildren<AgoraShareScreen>().SetupUI();
+                    ml.Lock();
+                    ml.EnableCursor();
+                }
+            }
+            else
+            {
+                ScreenUI.SetActive(false);
+                if (!ReferenceEquals(ml, null))
+                {
+                    ml.Unlock();
+                    ml.DisableCursor();
+                }
+            }
+            isOn = !isOn;
+        }
+    }
+
 }

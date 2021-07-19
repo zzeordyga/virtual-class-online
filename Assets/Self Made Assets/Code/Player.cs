@@ -37,14 +37,6 @@ public class Player : Photon.MonoBehaviour
             playerCamera.SetActive(true);
             playerAnimator = GetComponent<Animator>();
         }
-
-        VideoGroupController vgc = FindObjectOfType<VideoGroupController>();
-        if (!ReferenceEquals(vgc, null))
-        {
-            Debug.Log("Adding a new video");
-            vgc.AddVideo();
-        }
-
     }
 
     // Update is called once per frame
@@ -123,6 +115,12 @@ public class Player : Photon.MonoBehaviour
         velocity.y = gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
+
+        if(transform.position.y > 2.0f)
+        {
+            Debug.Log("HERE IT IS");
+            transform.position = new Vector3(transform.position.x, 1.08f, transform.position.z);
+        }
     }
 
 }

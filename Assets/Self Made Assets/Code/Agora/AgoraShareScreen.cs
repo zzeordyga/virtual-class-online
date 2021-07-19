@@ -11,6 +11,8 @@ using AgoraNative;
 /// </summary>
 public class AgoraShareScreen : MonoBehaviour
 {
+    public bool isMainScreen = false;
+    public GameObject screen;
 
     Dropdown WindowOptionDropdown;
 
@@ -21,11 +23,17 @@ public class AgoraShareScreen : MonoBehaviour
 #endif
     int CurrentDisplay = 0;
     private IRtcEngine mRtcEngine = null;
+    Texture2D mTexture;
+    Rect mRect;
 
     private void Start()
     {
         SetupUI();
         mRtcEngine = FindObjectOfType<GameManager>().RtcEngine;
+        // Creates a rectangular region of the screen.
+        mRect = new Rect(0, 0, Screen.width, Screen.height);
+        // Creates a texture of the rectangle you create.
+        mTexture = new Texture2D((int)mRect.width, (int)mRect.height, TextureFormat.RGBA32, false);
     }
 
     public void SetupUI()
@@ -65,7 +73,6 @@ public class AgoraShareScreen : MonoBehaviour
                     new Dropdown.OptionData(string.Format("{0, -20} | {1}",
                         w.Key.Substring(0, System.Math.Min(w.Key.Length, 20)), w.Value))).ToList());
 
-                Debug.Log(dropdown.options);
 
             }
 #endif
@@ -90,8 +97,19 @@ public class AgoraShareScreen : MonoBehaviour
         if (button != null)
         {
             Debug.Log("Button ga null");
-            button.onClick.AddListener(() => { mRtcEngine.StopScreenCapture(); });
+            button.onClick.AddListener(() => { StopScreenCapture(); });
         }
+
+        button = GameObject.Find("LeaveButton").GetComponent<Button>();
+        if (button != null)
+        {
+            button.onClick.AddListener(() =>
+            {
+                transform.parent.gameObject.GetComponent<Monitor>().Interact();
+            });
+        }
+
+        VideoSurface vs;
 
         GameObject quad = GameObject.Find("DisplayPlane");
         if (ReferenceEquals(quad, null))
@@ -102,8 +120,43 @@ public class AgoraShareScreen : MonoBehaviour
         }
         else
         {
-            quad.AddComponent<VideoSurface>();
+            vs = quad.AddComponent<VideoSurface>();
+            vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
         }
+
+        if (ReferenceEquals(screen, null))
+        {
+            Debug.Log("Display ga null");
+            Debug.Log("Error: failed to find DisplayPlane");
+            return;
+        }
+        else
+        {
+            vs = screen.AddComponent<VideoSurface>();
+            vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+        }
+
+        if (isMainScreen)
+        {
+            GameObject whiteboard = GameObject.Find("ProjectorScreen");
+            if (ReferenceEquals(whiteboard, null))
+            {
+                Debug.Log("Display ga null");
+                Debug.Log("Error: failed to find DisplayPlane");
+                return;
+            }
+            else
+            {
+                vs = whiteboard.AddComponent<VideoSurface>();
+                vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+            }
+        }
+
+    }
+
+    public void StopScreenCapture()
+    {
+        mRtcEngine.StopScreenCapture();
     }
 
     int displayID0or1 = 0;

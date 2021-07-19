@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using agora_gaming_rtc;
 
 public class VideoController : MonoBehaviour
 {
-    private bool camAvailable;
-    private WebCamTexture webcam;
-    private Texture defaultBackground;
     [SerializeField] private TMP_Text playerName;
 
-    public RawImage background;
-    public AspectRatioFitter fit;
+    private uint _uID;
+    public uint UID
+    {
+        get { return _uID; }
+        set { _uID = value; }
+    }
 
     private Player _player;
     public Player Player
@@ -21,57 +23,55 @@ public class VideoController : MonoBehaviour
         set { _player = value; }
     }
 
-    //private void Start()
-    //{
-    //    playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
+    private VideoRawDataManager videoRawDataManager;
+    protected const string SelfVideoName = "MyView";
 
-    //    defaultBackground = background.texture;
+    public VideoSurface Init(uint uid, bool isLocalUser)
+    {
+        UID = uid;
 
-    //    WebCamDevice[] devices = WebCamTexture.devices;
+        // create a GameObject and assign to this new user
+        VideoSurface videoSurface = makeImageSurface(UID.ToString());
+        if (!ReferenceEquals(videoSurface, null))
+        {
+            videoSurface.SetGameFps(30);
+            videoSurface.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+            videoSurface.EnableFilpTextureApply(enableFlipHorizontal: true, enableFlipVertical: false);
 
-    //    Debug.Log("Masuk kamera gan");
+            if (!isLocalUser)
+            {
+                Debug.Log("Is not Local");
+                videoSurface.SetForUser(UID);
+            }
+            else
+            {
+                Debug.Log("is local");
+            }
 
-    //    if (devices.Length == 0)
-    //    {
-    //        Debug.Log("No camera detected");
-    //        camAvailable = false;
-    //        return;
-    //    }
+        }
 
-    //    for (int i = 0; i < devices.Length; i++)
-    //    {
-    //        Debug.Log(devices[i].name);
+        return videoSurface;
+    }
 
-    //        // Still using the whole screen
-    //        webcam = new WebCamTexture(devices[i].name, Screen.width, Screen.height);
-    //    }
+    protected VideoSurface makeImageSurface(string goName)
+    {
+        GameObject go = transform.Find("Screen").gameObject;
 
-    //    if (webcam != null)
-    //    {
-    //        webcam.Play();
-    //        background.texture = webcam;
+        if (ReferenceEquals(go, null))
+        {
+            return null;
+        }
 
-    //        camAvailable = true;
-    //    }
+        go.name = goName;
 
-    //}
+        RawImage rawImage = go.GetComponent<RawImage>();
+        rawImage.rectTransform.sizeDelta = new Vector2(1, 1);// make it almost invisible
 
-    //private void Update()
-    //{
-    //    if (!camAvailable) return;
+        // set up transform
+        go.transform.Rotate(0f, 0.0f, 180.0f);
 
-    //    if(true)
-    //    {
-    //        float ratio = (float)webcam.width / (float)webcam.height;
-    //        fit.aspectRatio = ratio;
-
-    //        float scaleY = webcam.videoVerticallyMirrored ? -1f : 1f;
-    //        background.rectTransform.localScale = new Vector3(1f, scaleY, 1f);
-
-    //        int orient = -webcam.videoRotationAngle;
-    //        background.rectTransform.localEulerAngles = new Vector3(0, 0, orient);
-    //    }
-
-    //}
-
+        // configure videoSurface
+        VideoSurface videoSurface = go.GetComponent<VideoSurface>();
+        return videoSurface;
+    }
 }
