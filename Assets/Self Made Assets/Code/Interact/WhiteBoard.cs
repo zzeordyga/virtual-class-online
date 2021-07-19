@@ -7,14 +7,14 @@ public class WhiteBoard : Interactable
 { 
     public Camera playerCam;
     public Camera whiteboardCam;
-    private int isOn = 0;
-    public int IsOn{
+    private bool isOn = false;
+    public bool IsOn{
         get{return isOn;}
         set{isOn = value;}
     }
     public override string GetDescription(GameObject player)
     {
-        if (isOn != 0)
+        if (isOn)
         {
             return "";
         }
@@ -23,11 +23,11 @@ public class WhiteBoard : Interactable
 
     public override void Interact(GameObject player)
     {
-        transform.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.player);
+        transform.GetComponent<PhotonView>().RequestOwnership();
         Animator playerAnimator = player.GetComponent<Animator>();
         MouseLook ml = player.GetComponentInChildren<MouseLook>();
         GameObject ScreenUI = transform.Find("UI").gameObject;
-        if (isOn == 0)
+        if (!isOn)
         {
             ScreenUI.SetActive(true);
             if (!ReferenceEquals(ml, null))
@@ -36,7 +36,6 @@ public class WhiteBoard : Interactable
                 ml.EnableCursor();
             }
             player.GetComponent<CharacterController>().enabled = false;
-            isOn = 1;
         } else
         {
             ScreenUI.SetActive(false);
@@ -46,9 +45,8 @@ public class WhiteBoard : Interactable
                 ml.DisableCursor();
             }
             player.GetComponent<CharacterController>().enabled = true;
-            isOn = 2;
         }
-        // isOn = !isOn;
+        isOn = !isOn;
         playerCam.enabled = !playerCam.enabled;
         whiteboardCam.enabled = !whiteboardCam.enabled;
     }

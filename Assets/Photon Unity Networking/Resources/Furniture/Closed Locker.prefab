@@ -284,7 +284,7 @@ MonoBehaviour:
   OwnerShipWasTransfered: 0
   prefixBackup: -1
   synchronization: 3
-  onSerializeTransformOption: 3
+  onSerializeTransformOption: 1
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 1
   ObservedComponents:

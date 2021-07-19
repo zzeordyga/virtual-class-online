@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -17,7 +18,18 @@ public class Billboard : MonoBehaviour
     void Start()
     {
         if (cam == null) cam = Camera.main.transform;
-        //playerName.text = PhotonNetwork.player.CustomProperties["Name"].ToString();
+        if (transform.parent.GetComponent<PhotonView>().isMine)
+        {
+            string username = PlayerNetwork.instance.PlayerInfo.UserName;
+            string name = PlayerNetwork.instance.PlayerInfo.Name;
+            if (Regex.Matches(username, @"[0-9]{10}").Count != 0)
+            {
+                playerName.text = username;
+            } else
+            {
+                playerName.text = name;
+            }
+        }
     }
 
     void LateUpdate()
