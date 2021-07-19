@@ -1246,7 +1246,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   Reset_Canvas_On_Play: 1
-  Reset_Colour: {r: 1, g: 1, b: 1, a: 1}
+  Reset_Colour: {r: 0.42352942, g: 0.47058824, b: 0.53333336, a: 1}
   rawData: 
 --- !u!212 &8907939070648203831
 SpriteRenderer:

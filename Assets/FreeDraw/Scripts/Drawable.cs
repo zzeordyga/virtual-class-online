@@ -45,6 +45,8 @@ namespace FreeDraw
         [SerializeField]
         private byte[] rawData;
 
+        private Vector2 mouse_world_position;
+
         Vector2 previous_drag_position;
         Color[] clean_colours_array;
         Color transparent;
@@ -147,12 +149,13 @@ namespace FreeDraw
             Debug.Log("Whiteboard Serialize");
             if (stream.isWriting)
             {
-                stream.SendNext(mouseInput);
+                stream.SendNext(mouse_world_position);
+                stream.SendNext(current_brush);
             }
             else
             {
-                mouseInput = (Vector3)stream.ReceiveNext();
-                Debug.Log("Receive Pos : " + mouseInput);
+                mouse_world_position = (Vector2)stream.ReceiveNext();
+                current_brush = (Brush_Function)stream.ReceiveNext();
             }
         }
 
@@ -161,9 +164,9 @@ namespace FreeDraw
             WhiteBoard wb = transform.parent.GetComponent<WhiteBoard>();
             if (!transform.parent.GetComponent<PhotonView>().isMine)
             {
-                Debug.Log("Auto Drawing...");
-                Vector2 mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
-                Debug.Log("Draw Pos : " + mouse_world_position);
+                // Debug.Log("Auto Drawing...");
+                // Vector2 mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
+                // Debug.Log("Draw Pos : " + mouse_world_position);
                 current_brush(mouse_world_position);
             } else if (transform.parent.GetComponent<PhotonView>().isMine && wb.IsOn)
             {
@@ -174,8 +177,9 @@ namespace FreeDraw
                     Debug.Log("Drawing...");
                     // Convert mouse coordinates to world coordinates
                     mouseInput = Input.mousePosition;
-                    Vector2 mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
-
+                    mouse_world_position = wb.transform.Find("WhiteboardCamera").GetComponent<Camera>().ScreenToWorldPoint(mouseInput);
+                    // Vector2 offSet = new Vector2(1000f / 2f, 750f / 2f);
+                    // Vector2 position = new Vector2(1000f * mouse_world_position.x - rect.rect.width / 2, 750f * mouse_world_position.y + rect.rect.height / 2 + 10f);
                     // Check if the current mouse position overlaps our image
                     Collider2D hit = Physics2D.OverlapPoint(mouse_world_position, Drawing_Layers.value);
                     if (hit != null && hit.transform != null)
