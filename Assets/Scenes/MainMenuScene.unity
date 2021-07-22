@@ -2797,10 +2797,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   videoCanvasCamera: {fileID: 1358473956}
   vgc: {fileID: 1021638930}
-  AppID: 69c9d55ce62e4a3384886a8b1de3261d
-  appIDText: {fileID: 0}
+  players: []
   VersionName: 0.0.0
-  PhotonView: {fileID: 973601292}
   playerPrefab: {fileID: 6487379859009980261, guid: 9a9cf573ca2571143b32b9e9d1d3978a,
     type: 3}
 --- !u!4 &973601291
@@ -2833,7 +2831,7 @@ MonoBehaviour:
   group: 0
   OwnerShipWasTransfered: 0
   prefixBackup: -1
-  synchronization: 0
+  synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   ownershipTransfer: 0

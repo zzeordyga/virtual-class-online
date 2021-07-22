@@ -21,6 +21,8 @@ public class Player : Photon.MonoBehaviour
     private Quaternion rotate;
     private List<GameObject> playerVideoList;
 
+    public static Player instance = null;
+
     #region Movement Variables
     public float speed = 12f;
     public bool isRunning = false;
@@ -44,22 +46,23 @@ public class Player : Photon.MonoBehaviour
     private string AppID = "your_appid";
     [SerializeField]
     private Text appIDText;
-    private IRtcEngine mRtcEngine = null;
-    public IRtcEngine RtcEngine
+    private static IRtcEngine mRtcEngine = null;
+    public static IRtcEngine RtcEngine
     {
         get { return mRtcEngine; }
     }
     private string mChannel = "";
     private string tokenURL = "https://virtual-class-online.herokuapp.com/access_token?";
 
-    private static uint myUid = 9032;
-    public static uint MyUiD
+    /// <summary>
+    /// The local client current AgoraID in the current room
+    /// </summary>
+    public uint currUid;
+
+    private string username;
+    public string Username
     {
-        get { return myUid; }
-    }
-    public string MChannel
-    {
-        get { return mChannel; }
+        get { return username; }
     }
 
     private bool isJoined = false;
@@ -68,13 +71,26 @@ public class Player : Photon.MonoBehaviour
 
     private void Start()
     {
+        username = PlayerNetwork.instance.PlayerInfo.UserName;
+
+        Debug.Log("Debug Curr UID : " + currUid + " | " + "Debug Owner ID : " + photonView.ownerId);
+        
+
+        FindObjectOfType<GameManager>().AddPlayer(this);
+
+        InitBillboard();
+
         CheckAppId();
         PhotonView = GetComponent<PhotonView>();
+
+        Debug.Log("Player is awake");
 
         if (!photonView.isMine)
         {
             return;
         }
+
+        instance = this;
 
         playerCamera.SetActive(true);
         playerAnimator = GetComponent<Animator>();
@@ -88,9 +104,19 @@ public class Player : Photon.MonoBehaviour
 
         PrepareToJoin();
 
-        Debug.Log("Player is awake");
         playerVideoList = new List<GameObject>();
         JoinAgoraChannel(GameManager.RoomName);
+    }
+
+    private void InitBillboard()
+    {
+        Billboard billboard = GetComponentInChildren<Billboard>();
+
+        if (!ReferenceEquals(billboard, null))
+        {
+            Debug.Log("INITIALIZING BILLBOARD");
+            billboard.Init(photonView.ownerId);
+        }
     }
 
     // Update is called once per frame
@@ -398,50 +424,40 @@ public class Player : Photon.MonoBehaviour
     // implement engine callbacks
     private void OnJoinChannelSuccessHandler(string channelName, uint uid, int elapsed)
     {
+        foreach (Player player in FindObjectOfType<GameManager>().players)
+        {
+            player.InitBillboard();
+        }
 
         if (!photonView.isMine)
         {
             return;
         }
 
-        myUid = uid;
+        currUid = uid;
 
         Debug.Log("ONJOINCHANNELSUCCESS");
 
         CreateUserVideoSurface(uid, true);
     }
 
-    // When a remote user joined, this delegate will be called. Typically
-    // create a GameObject to render video on it
-    protected void OnUserJoined(uint uid, int elapsed)
-    {
-        Debug.Log("onUserJoined: uid = " + uid + " elapsed = " + elapsed);
-        //if (!PhotonView.isMine)
-        //{
-        //    Debug.Log("What is mine");
-        //    return;
-        //}
-        //else
-        //{
-        //    Debug.Log("This is mine!");
-        ////}
-
-        //if (!ReferenceEquals(vgc, null))
-        //{
-        //    Debug.Log("Adding a new video");
-        //    vgc.AddVideo(uid, false);
-        //}
-        UIDDictionary[uid] = false;
-
-        CreateUserVideoSurface(uid, false);
-    }
-
     private void OnUserJoinedHandler(uint uid, int elapsed)
     {
+        
+
+        Debug.Log("UserJoinedHandler : " + uid);
+
+        foreach(Player player in FindObjectOfType<GameManager>().players)
+        {
+            player.InitBillboard();
+        }
+
         if (!PhotonView.isMine)
         {
             return;
         }
+
+        currUid = uid;
 
         CreateUserVideoSurface(uid, false);
     }

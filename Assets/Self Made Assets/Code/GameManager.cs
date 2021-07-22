@@ -31,25 +31,13 @@ public class GameManager : MonoBehaviour
     private static String roomName = "";
     private Player currPlayer = null;
     private static List<uint> uidList = new List<uint>();
-
-    public static bool AddUser(uint uid)
-    {
-        if (!uidList.Contains(uid))
-        {
-            uidList.Add(uid);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    public List<Player> players = new List<Player>();
+    public Dictionary<Player, PhotonPlayer> photonPlayerDictionary = new Dictionary<Player, PhotonPlayer>();
 
     public static String RoomName
     {
         get { return roomName; }
     }
-
 
     [Header("Photon Properties")]
     [SerializeField]
@@ -59,13 +47,12 @@ public class GameManager : MonoBehaviour
 #if (UNITY_2018_3_OR_NEWER && UNITY_ANDROID)
     private ArrayList permissionList = new ArrayList();
 #endif
-    static IVideoChatClient app = null;
-
     public GameObject playerPrefab;
 
     private void Start()
     {
         /*CheckAppId();*/ //  Agora App Id
+        
     }
 
     void Update()
@@ -90,9 +77,6 @@ public class GameManager : MonoBehaviour
             MaxPlayers = 5
         };
 
-        Debug.Log("CreateRoom, Name : " + name);
-        Debug.Log("CreateRoom, Length : " + name.Length);
-
         roomName = name.Substring(0, name.Length - 1);
 
         if (PhotonNetwork.CreateRoom(roomName, roomOptions, TypedLobby.Default))
@@ -107,9 +91,6 @@ public class GameManager : MonoBehaviour
 
     public void JoinRoom(string name)
     {
-        Debug.Log("JoinRoom, Name : " + name);
-        Debug.Log("JoinRoom, Length : " + name.Length);
-
         roomName = name;
 
         if (PhotonNetwork.JoinRoom(name))
@@ -122,6 +103,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddPlayer(Player player)
+    {
+        players.Add(player);
+        
+
+
+    }
+
     private bool isCreator = false;
 
     private void OnPhotonCreateRoomFailed(object[] codeAndMessage)
@@ -131,6 +120,7 @@ public class GameManager : MonoBehaviour
 
     private void OnCreatedRoom()
     {
+        PhotonNetwork.player.NickName = PlayerNetwork.instance.PlayerInfo.UserName;
         Debug.Log("Room create successfully");
         PhotonNetwork.LoadLevel("ClassScene");
         videoCanvasCamera.gameObject.SetActive(true);
@@ -141,6 +131,7 @@ public class GameManager : MonoBehaviour
     private void OnJoinedRoom()
     {
         Debug.Log("Joined A Room Successfully (OnJoinedRoom)");
+        PhotonNetwork.player.NickName = PlayerNetwork.instance.PlayerInfo.UserName;
         videoCanvasCamera.gameObject.SetActive(true);
         if (!isCreator)
         {

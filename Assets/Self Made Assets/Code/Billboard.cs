@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -18,18 +19,40 @@ public class Billboard : MonoBehaviour
     void Start()
     {
         if (cam == null) cam = Camera.main.transform;
+    }
+
+    public void Init()
+    {
         if (transform.parent.GetComponent<PhotonView>().isMine)
         {
-            string username = PlayerNetwork.instance.PlayerInfo.UserName;
             string name = PlayerNetwork.instance.PlayerInfo.Name;
-            if (Regex.Matches(username, @"[0-9]{10}").Count != 0)
+
+            playerName.text = name;
+        }
+
+        foreach (PhotonPlayer player in PhotonNetwork.playerList)
+        {
+            Debug.Log("[Billboard] Player Name : " + player.NickName + " | Player ID : " + player.ID + " | Current Player ID : " + this.player.currUid);
+
+            if (this.player.currUid == player.ID)
             {
-                playerName.text = username;
-            } else
-            {
-                playerName.text = name;
+                Debug.Log("[Billboard] Changing the Text"); 
+                playerName.text = player.NickName;
+                break;
             }
         }
+    }
+
+    public void Init(int id)
+    {
+        foreach(PhotonPlayer player in PhotonNetwork.playerList)
+        {
+            if(player.ID == id)
+            {
+                playerName.text = player.NickName;
+            }
+        }
+        
     }
 
     void LateUpdate()

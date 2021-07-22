@@ -8105,6 +8105,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 5858089310147845599}
   - {fileID: -1854115265648222201}
+  - {fileID: 1932520041335982226}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -8153,6 +8154,7 @@ MonoBehaviour:
     m_Bits: 64
   AppID: 69c9d55ce62e4a3384886a8b1de3261d
   appIDText: {fileID: 0}
+  currUid: 0
 --- !u!95 &8952457488378965421
 Animator:
   serializedVersion: 3

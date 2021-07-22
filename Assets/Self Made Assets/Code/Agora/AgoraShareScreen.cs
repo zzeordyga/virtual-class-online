@@ -11,7 +11,6 @@ using AgoraNative;
 /// </summary>
 public class AgoraShareScreen : MonoBehaviour
 {
-    public bool isMainScreen = false;
     public GameObject screen;
 
     Dropdown WindowOptionDropdown;
@@ -28,8 +27,8 @@ public class AgoraShareScreen : MonoBehaviour
 
     private void Start()
     {
-        SetupUI();
-        mRtcEngine = FindObjectOfType<Player>().RtcEngine;
+        SetupUI(false);
+        mRtcEngine = Player.RtcEngine;
         // Creates a rectangular region of the screen.
         mRect = new Rect(0, 0, Screen.width, Screen.height);
         // Creates a texture of the rectangle you create.
@@ -40,11 +39,11 @@ public class AgoraShareScreen : MonoBehaviour
     {
         if(mRtcEngine == null)
         {
-            mRtcEngine = FindObjectOfType<Player>().RtcEngine;
+            mRtcEngine = Player.RtcEngine;
         }
     }
 
-    public void SetupUI()
+    public void SetupUI(bool isMainScreen)
     {
         Dropdown dropdown = GameObject.Find("Dropdown").GetComponent<Dropdown>();
         if (dropdown != null)
@@ -99,7 +98,7 @@ public class AgoraShareScreen : MonoBehaviour
         button = GameObject.Find("StopShareButton").GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(() => { StopScreenCapture(); });
+            button.onClick.AddListener(() => { StopScreenCapture(true); });
         }
 
         button = GameObject.Find("LeaveButton").GetComponent<Button>();
@@ -107,9 +106,8 @@ public class AgoraShareScreen : MonoBehaviour
         {
             button.onClick.AddListener(() =>
             {
-                //ini butuh player sih
                 transform.parent.gameObject.GetComponent<Monitor>().Interact();
-                StopScreenCapture();
+                StopScreenCapture(true);
             });
         }
 
@@ -128,6 +126,14 @@ public class AgoraShareScreen : MonoBehaviour
             vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
         }
 
+        ProjectShareScreen(isMainScreen);
+
+    }
+
+    private void ProjectShareScreen(bool isMainScreen)
+    {
+        VideoSurface vs;
+
         if (ReferenceEquals(screen, null))
         {
             Debug.Log("Display ga null");
@@ -138,6 +144,11 @@ public class AgoraShareScreen : MonoBehaviour
         {
             vs = screen.AddComponent<VideoSurface>();
             vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+
+            Monitor currMonitor = transform.GetComponentInParent<Monitor>();
+
+            if (!ReferenceEquals(currMonitor, null) && currMonitor.broadcastingUid != Player.instance.currUid) 
+                vs.SetForUser(currMonitor.broadcastingUid);
         }
 
         if (isMainScreen)
@@ -153,17 +164,56 @@ public class AgoraShareScreen : MonoBehaviour
             {
                 vs = whiteboard.AddComponent<VideoSurface>();
                 vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
+
+                Monitor currMonitor = transform.GetComponentInParent<Monitor>();
+
+                if (!ReferenceEquals(currMonitor, null) && currMonitor.broadcastingUid != Player.instance.currUid)
+                    vs.SetForUser(currMonitor.broadcastingUid);
+
+                vs.EnableFilpTextureApply(true, false);
+                vs.transform.Rotate(Vector3.up, 180);
             }
         }
-
     }
 
-    public void StopScreenCapture()
+    private void RemoveProjection(bool isMainScreen)
+    {
+        VideoSurface vs;
+
+        if (ReferenceEquals(screen, null))
+        {
+            Debug.Log("Display ga null");
+            Debug.Log("Error: failed to find DisplayPlane");
+            return;
+        }
+        else
+        {
+            Destroy(screen.GetComponent<VideoSurface>());
+        }
+
+        if (isMainScreen)
+        {
+            GameObject whiteboard = GameObject.Find("ProjectorScreen");
+            if (ReferenceEquals(whiteboard, null))
+            {
+                Debug.Log("Display ga null");
+                Debug.Log("Error: failed to find DisplayPlane");
+                return;
+            }
+            else
+            {
+                vs = whiteboard.AddComponent<VideoSurface>();
+                if (!ReferenceEquals(vs, null)) Destroy(screen.GetComponent<VideoSurface>());
+            }
+        }
+    }
+
+    public void StopScreenCapture(bool isMainScreen)
     {
         mRtcEngine.StopScreenCapture();
+        RemoveProjection(isMainScreen);
     }
 
-    int displayID0or1 = 0;
     void ShareDisplayScreen()
     {
         ScreenCaptureParameters sparams = new ScreenCaptureParameters
