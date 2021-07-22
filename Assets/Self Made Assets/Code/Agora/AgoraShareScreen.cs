@@ -37,7 +37,7 @@ public class AgoraShareScreen : MonoBehaviour
 
     private void Update()
     {
-        if(mRtcEngine == null)
+        if(ReferenceEquals(mRtcEngine, null))
         {
             mRtcEngine = Player.RtcEngine;
         }
@@ -86,13 +86,13 @@ public class AgoraShareScreen : MonoBehaviour
         Button button = GameObject.Find("ShareWindowButton").GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(OnShareWindowClick);
+            button.onClick.AddListener(() => OnShareWindowClick(true));
         }
 
         button = GameObject.Find("ShareDisplayButton").GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(ShareDisplayScreen);
+            button.onClick.AddListener(() => ShareDisplayScreen(true));
         }
 
         button = GameObject.Find("StopShareButton").GetComponent<Button>();
@@ -130,7 +130,7 @@ public class AgoraShareScreen : MonoBehaviour
 
     }
 
-    private void ProjectShareScreen(bool isMainScreen)
+    public void ProjectShareScreen(bool isMainScreen)
     {
         VideoSurface vs;
 
@@ -146,9 +146,6 @@ public class AgoraShareScreen : MonoBehaviour
             vs.SetVideoSurfaceType(AgoraVideoSurfaceType.Renderer);
 
             Monitor currMonitor = transform.GetComponentInParent<Monitor>();
-
-            if (!ReferenceEquals(currMonitor, null) && currMonitor.broadcastingUid != Player.instance.currUid) 
-                vs.SetForUser(currMonitor.broadcastingUid);
         }
 
         if (isMainScreen)
@@ -167,16 +164,13 @@ public class AgoraShareScreen : MonoBehaviour
 
                 Monitor currMonitor = transform.GetComponentInParent<Monitor>();
 
-                if (!ReferenceEquals(currMonitor, null) && currMonitor.broadcastingUid != Player.instance.currUid)
-                    vs.SetForUser(currMonitor.broadcastingUid);
-
                 vs.EnableFilpTextureApply(true, false);
                 vs.transform.Rotate(Vector3.up, 180);
             }
         }
     }
 
-    private void RemoveProjection(bool isMainScreen)
+    public void RemoveProjection(bool isMainScreen)
     {
         VideoSurface vs;
 
@@ -214,15 +208,23 @@ public class AgoraShareScreen : MonoBehaviour
         RemoveProjection(isMainScreen);
     }
 
-    void ShareDisplayScreen()
+    public void ShareDisplayScreen(bool ignore)
     {
+        if (ignore)
+        {
+            Monitor monitor = transform.parent.gameObject.GetComponent<Monitor>();
+            if (!ReferenceEquals(monitor, null))
+            {
+                monitor.BroadcastShareDisplay();
+            }
+        }
         ScreenCaptureParameters sparams = new ScreenCaptureParameters
         {
             captureMouseCursor = true,
             frameRate = 15
         };
 
-        mRtcEngine.StopScreenCapture();
+        if(mRtcEngine != null) mRtcEngine.StopScreenCapture();
 
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         mRtcEngine.StartScreenCaptureByDisplayId(MacDisplays[CurrentDisplay], default(Rectangle), sparams); 
@@ -263,8 +265,17 @@ public class AgoraShareScreen : MonoBehaviour
         if (rc != 0) Debug.LogWarning("rc = " + rc);
     }
 
-    void OnShareWindowClick()
+    public void OnShareWindowClick(bool ignore)
     {
+        if (ignore)
+        {
+            Monitor monitor = transform.parent.gameObject.GetComponent<Monitor>();
+            if (!ReferenceEquals(monitor, null))
+            {
+                monitor.BroadcastShareWindow();
+            }
+        }
+
         char[] delimiterChars = { '|' };
         if (WindowOptionDropdown == null) return;
         string option = WindowOptionDropdown.options[WindowOptionDropdown.value].text;

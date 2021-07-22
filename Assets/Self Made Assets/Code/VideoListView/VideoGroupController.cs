@@ -52,27 +52,7 @@ public class VideoGroupController : MonoBehaviour
         }
         newVideoSurface.SetGameFps(30);
 
-        // Update our "Content" container that holds all the newUserVideo image planes
-
-
-        //if (!ReferenceEquals(videoWindow, null))
-        //{
-        //    videoWindow.transform.SetParent(transform, false);
-
-        //    VideoSurface vs = videoWindow.GetComponent<VideoController>().Init(uid, isLocalUser);
-
-        //    if (!ReferenceEquals(vs, null))
-        //    {
-        //        UserVideoDict[uid] = vs;
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log("Ayo wath?????");
-        //}
-
         return newVideoSurface;
-
     }
 
     public void RemoveVideo(uint UiD)

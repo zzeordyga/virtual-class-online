@@ -587,7 +587,7 @@ Transform:
   m_GameObject: {fileID: 1069452349228806774}
   m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0.672358, y: 0.63657314, z: 0.030412197}
-  m_LocalScale: {x: 170, y: 225, z: 170}
+  m_LocalScale: {x: 170, y: 225, z: 169.99998}
   m_Children:
   - {fileID: 3413464743390222670}
   - {fileID: 8191153997508852636}
@@ -658,8 +658,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 8029011629722653851}
+  shareScreenScript: {fileID: 4196302215508051532}
   isMainScreen: 0
-  broadcastingUid: 4294967295
 --- !u!114 &4880434037245711666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,8 +682,8 @@ MonoBehaviour:
   ownershipTransfer: 1
   ObservedComponents:
   - {fileID: 910990079021459469}
-  - {fileID: 2344045978172557511}
   - {fileID: 4196302215508051532}
+  - {fileID: 2344045978172557511}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1

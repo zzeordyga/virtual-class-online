@@ -73,17 +73,12 @@ public class Player : Photon.MonoBehaviour
     {
         username = PlayerNetwork.instance.PlayerInfo.UserName;
 
-        Debug.Log("Debug Curr UID : " + currUid + " | " + "Debug Owner ID : " + photonView.ownerId);
-        
-
         FindObjectOfType<GameManager>().AddPlayer(this);
 
         InitBillboard();
 
         CheckAppId();
         PhotonView = GetComponent<PhotonView>();
-
-        Debug.Log("Player is awake");
 
         if (!photonView.isMine)
         {
@@ -114,7 +109,6 @@ public class Player : Photon.MonoBehaviour
 
         if (!ReferenceEquals(billboard, null))
         {
-            Debug.Log("INITIALIZING BILLBOARD");
             billboard.Init(photonView.ownerId);
         }
     }
@@ -335,8 +329,6 @@ public class Player : Photon.MonoBehaviour
 
     public void Join(string channel)
     {
-        Debug.Log("calling join (channel = " + channel + ")");
-
         if (mRtcEngine == null)
             return;
 
@@ -389,12 +381,9 @@ public class Player : Photon.MonoBehaviour
 
     IEnumerator GetToken(string channelName)
     {
-        Debug.Log("Channel Name : " + channelName);
         channelName = channelName.Substring(0, channelName.Length - 1);
         uint uid;
         uid = 0;
-
-        Debug.Log(String.Format("{0}channel={1}&uid={2}", tokenURL, channelName, uid));
 
         UnityWebRequest unityWebRequest = UnityWebRequest.Get(String.Format("{0}channel={1}&uid={2}", tokenURL, channelName, uid));
         yield return unityWebRequest.SendWebRequest();
@@ -436,8 +425,6 @@ public class Player : Photon.MonoBehaviour
 
         currUid = uid;
 
-        Debug.Log("ONJOINCHANNELSUCCESS");
-
         CreateUserVideoSurface(uid, true);
     }
 
@@ -456,8 +443,6 @@ public class Player : Photon.MonoBehaviour
         {
             return;
         }
-
-        currUid = uid;
 
         CreateUserVideoSurface(uid, false);
     }

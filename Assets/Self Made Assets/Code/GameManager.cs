@@ -130,7 +130,6 @@ public class GameManager : MonoBehaviour
 
     private void OnJoinedRoom()
     {
-        Debug.Log("Joined A Room Successfully (OnJoinedRoom)");
         PhotonNetwork.player.NickName = PlayerNetwork.instance.PlayerInfo.UserName;
         videoCanvasCamera.gameObject.SetActive(true);
         if (!isCreator)

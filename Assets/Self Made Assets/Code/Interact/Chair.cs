@@ -26,7 +26,7 @@ public class Chair : Interactable
 
         player.GetComponent<CharacterController>().enabled = false;
 
-        player.transform.position = transform.Find("SitCheck").position - new Vector3(0f, 1.2f, 0f);
+        player.transform.position = transform.Find("SitCheck").position - new Vector3(0f, 0.6f, 0f);
 
 
         if (!ReferenceEquals(playerAnimator, null)) playerAnimator.SetBool("Sitting", true);
