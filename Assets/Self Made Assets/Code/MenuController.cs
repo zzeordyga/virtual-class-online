@@ -9,10 +9,17 @@ public class MenuController : MonoBehaviour
     public GameObject loginMenuCanvas;
     public GameObject mainMenuCanvas;
     public GameObject lobbyNetwork;
+    public GameObject VideoManager;
 
     private void Start()
     {
-        SwitchMenu(1);
+        if (PlayerNetwork.instance.PlayerInfo.UserId != null)
+        {
+            SwitchMenu(3);
+        } else
+        {
+            SwitchMenu(1);
+        }
     }
 
     public void SwitchMenu(int flag)
