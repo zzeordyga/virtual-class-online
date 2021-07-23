@@ -234,7 +234,7 @@ public class Player : Photon.MonoBehaviour
         TerminateAgoraEngine();
     }
 
-    private void TerminateAgoraEngine()
+    public void TerminateAgoraEngine()
     {
         if (mRtcEngine != null)
         {
